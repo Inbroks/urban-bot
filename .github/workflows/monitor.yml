@@ -2,17 +2,19 @@ name: UO Jaded London monitor
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    # Каждые 30 минут с 7:00 до 1:30 по Москве. Время в cron — UTC (МСК = UTC+3):
+    # часы 4–22 UTC = 7:00–1:59 МСК, то есть с 2:00 до 7:00 МСК проверок нет.
+    - cron: "*/30 4-22 * * *"
   workflow_dispatch:
     inputs:
       mode:
-        description: "run — обычная проверка; test — прислать в Telegram текущие скидки (state не меняется)"
+        description: "run — обычная проверка; test — прислать в Telegram текущие скидки"
         type: choice
         options: [run, test]
         default: run
 
 permissions:
-  contents: write
+  contents: write                # чтобы сохранять state.json в репозиторий
 
 concurrency:
   group: uo-monitor
@@ -36,13 +38,14 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}      # с 1 по 15 число
+          FIRECRAWL_API_KEY_2: ${{ secrets.FIRECRAWL_API_KEY_2 }}  # с 16 до конца месяца
           PROXY_URL: ${{ secrets.PROXY_URL }}
           MODE: ${{ github.event.inputs.mode || 'run' }}
         run: python -m uo_monitor
 
       - name: Save state
-        if: always() && (github.event.inputs.mode || 'run') == 'run'
+        if: always()
         run: |
           [ -f state.json ] || exit 0
           git config user.name "github-actions[bot]"
@@ -51,6 +54,7 @@ jobs:
           if git diff --cached --quiet; then echo "state не изменился"; exit 0; fi
           git commit -m "Update state [skip ci]"
           for i in 1 2 3; do
+            # -X theirs: при конфликте оставляем только что посчитанный state
             git pull --rebase -X theirs origin "${GITHUB_REF_NAME}" && git push && exit 0
             sleep 5
           done
