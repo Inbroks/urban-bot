@@ -17,6 +17,7 @@ TITLES = {
     "new": "🆕 <b>Новая вещь со скидкой</b>",
     "drop": "📉 <b>Цена снизилась</b>",
     "sizes": "📏 <b>Появились новые размеры</b>",
+    "back": "🔁 <b>Снова в наличии</b>",
     "test": "🧪 <b>Тест: сейчас со скидкой</b>",
 }
 
@@ -33,7 +34,7 @@ def fmt_price(value: Optional[float], currency: str) -> str:
     return f"{value:.2f} {currency}"
 
 
-def _discount_pct(price: Optional[float], full: Optional[float]) -> Optional[int]:
+def discount_pct(price: Optional[float], full: Optional[float]) -> Optional[int]:
     if price is None or not full or price >= full - 0.005:
         return None
     return round((1 - price / full) * 100)
@@ -46,7 +47,8 @@ def _sizes_text(sizes: List[str], new: List[str]) -> str:
 
 
 def build_caption(item: Dict[str, Any], events: List[str], details: Dict[str, Any],
-                  sites: List[Site], site_ok: Dict[str, bool]) -> str:
+                  sites: Dict[str, Site]) -> str:
+    """item: {"style","color","name","color_name","uk":{...},"de":{...}|None}"""
     lines = [TITLES[e] for e in events]
     lines.append("")
     lines.append(f"<b>{escape(item.get('name') or item['style'])}</b>")
@@ -55,47 +57,40 @@ def build_caption(item: Dict[str, Any], events: List[str], details: Dict[str, An
     lines.append("")
 
     drops = details.get("drops") or {}
-    new_sizes = details.get("new_sizes") or {}
-    for site in sites:
-        s = item["sites"].get(site.code)
-        if not s:
-            lines.append(f"{site.flag} " + ("нет на сайте" if site_ok.get(site.code)
-                                             else "не удалось загрузить"))
+    for code in ("de", "uk"):
+        site = sites[code]
+        data = item.get(code) or {}
+        if data.get("price") is None:
+            lines.append(f"{site.flag} цену загрузить не удалось")
             continue
-        line = f"{site.flag} <b>{fmt_price(s.get('price'), site.currency)}</b>"
-        pct = _discount_pct(s.get("price"), s.get("full_price"))
+        line = f"{site.flag} <b>{fmt_price(data['price'], site.currency)}</b>"
+        pct = discount_pct(data.get("price"), data.get("full_price"))
         if pct:
-            line += f"  <s>{fmt_price(s.get('full_price'), site.currency)}</s>  −{pct}%"
-        if site.code in drops:
-            line += f"\n      было {fmt_price(drops[site.code], site.currency)}"
+            line += f"  <s>{fmt_price(data.get('full_price'), site.currency)}</s>  −{pct}%"
+        if data.get("stale"):
+            line += "  <i>(последняя известная)</i>"
+        if code in drops:
+            line += f"\n      было {fmt_price(drops[code], site.currency)}"
         lines.append(line)
 
-    # Размеры: одной строкой, если на обоих сайтах одинаково
-    size_rows = [(site, item["sites"][site.code]["sizes"]) for site in sites
-                 if site.code in item["sites"] and item["sites"][site.code].get("sizes") is not None]
-    if size_rows:
+    sizes = (item.get("uk") or {}).get("sizes")
+    if sizes is not None:
         lines.append("")
-        first = size_rows[0][1]
-        same = all(r[1] == first for r in size_rows) and \
-            all(new_sizes.get(r[0].code, []) == new_sizes.get(size_rows[0][0].code, []) for r in size_rows)
-        if same and len(size_rows) > 1:
-            lines.append("📏 Размеры: " + _sizes_text(first, new_sizes.get(size_rows[0][0].code, [])))
-        else:
-            for site, sizes in size_rows:
-                lines.append(f"📏 {site.flag} " + _sizes_text(sizes, new_sizes.get(site.code, [])))
+        lines.append("📏 Размеры: " + _sizes_text(sizes, details.get("new_sizes") or []))
 
     caption = "\n".join(lines)
     return caption if len(caption) <= 1024 else caption[:1020] + "…"
 
 
-def build_buttons(item: Dict[str, Any], sites: List[Site]) -> List[List[Dict[str, str]]]:
-    row = []
-    for site in sites:
-        s = item["sites"].get(site.code)
-        if s and s.get("slug"):
-            label = "Открыть DE" if site.code == "de" else "Открыть UK"
-            row.append({"text": f"{site.flag} {label}", "url": site.product_url(s["slug"], item["color"])})
-    return [row] if row else []
+def build_buttons(item: Dict[str, Any], sites: Dict[str, Site]) -> List[List[Dict[str, str]]]:
+    slug = (item.get("uk") or {}).get("slug")
+    if not slug:
+        return []
+    de_slug = (item.get("de") or {}).get("slug") or slug
+    return [[
+        {"text": "🇩🇪 Открыть DE", "url": sites["de"].product_url(de_slug, item["color"])},
+        {"text": "🇬🇧 Открыть UK", "url": sites["uk"].product_url(slug, item["color"])},
+    ]]
 
 
 def image_url(item: Dict[str, Any]) -> str:
@@ -107,7 +102,6 @@ class Telegram:
     def __init__(self, token: Optional[str], chat_ids: List[str]):
         self.token = token
         self.chat_ids = chat_ids
-        self.sent = 0
 
     @property
     def enabled(self) -> bool:
@@ -147,7 +141,6 @@ class Telegram:
                 if markup:
                     text_payload["reply_markup"] = markup
                 self._call("sendMessage", text_payload)
-            self.sent += 1
             time.sleep(1.1)
 
     def send_text(self, text: str) -> None:
@@ -157,5 +150,4 @@ class Telegram:
         for chat in self.chat_ids:
             self._call("sendMessage", {"chat_id": chat, "text": text, "parse_mode": "HTML",
                                        "link_preview_options": {"is_disabled": True}})
-            self.sent += 1
             time.sleep(1.1)

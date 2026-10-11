@@ -1,15 +1,21 @@
-"""Один проход проверки: загрузить обе страницы, сравнить с прошлым состоянием, отправить уведомления."""
-import copy
+"""Один проход проверки.
+
+Экономная схема (1 кредит Firecrawl на обычную проверку):
+  1. Каждый запуск — только страница бренда UK: цены, скидки, новые вещи.
+  2. Карточка товара UK (размеры) — только для вещей, где что-то случилось
+     (новая вещь со скидкой, снижение цены, возврат в наличие), и плановая проверка
+     размеров у всех вещей со скидкой в часы SIZE_CHECK_HOURS (по умолчанию 9:00 и 21:00 МСК).
+  3. Страница DE (цены в €) — только если есть что отправить, одна на запуск.
+"""
 import json
 import logging
 import os
-import time
 from datetime import datetime, timedelta, timezone
 from html import escape
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
-from .config import Settings, Site
+from .config import MSK, Settings, Site
 from .fetch import FetchError, Fetcher
 from .parse import (LISTING_MARKER, PRODUCT_MARKER, ColorInfo, ParseError, Tile,
                     parse_listing, parse_product)
@@ -25,12 +31,12 @@ EPS = 0.005
 
 # ------------------------------------------------------------------ state
 def load_state(path: str) -> Dict[str, Any]:
+    state: Dict[str, Any] = {}
     if os.path.exists(path):
         with open(path, encoding="utf-8") as f:
             state = json.load(f)
-    else:
-        state = {}
-    state.setdefault("version", 1)
+    if state.get("version") != 2:          # формат прошлой версии бота — начинаем заново
+        state = {"version": 2}
     state.setdefault("initialized", False)
     state.setdefault("items", {})
     return state
@@ -42,6 +48,42 @@ def save_state(path: str, state: Dict[str, Any]) -> None:
         json.dump(state, f, ensure_ascii=False, indent=1, sort_keys=True)
         f.write("\n")
     os.replace(tmp, path)
+
+
+# ------------------------------------------------------------------ calendar & budget
+def half_period(msk: datetime) -> Tuple[str, datetime, datetime, int]:
+    """Половина месяца: (метка, начало, конец, индекс ключа Firecrawl)."""
+    first = msk.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    mid = first.replace(day=16)
+    nxt = (first + timedelta(days=32)).replace(day=1)
+    if msk < mid:
+        return f"{msk:%Y-%m}-1", first, mid, 0
+    return f"{msk:%Y-%m}-2", mid, nxt, 1
+
+
+def last_size_slot(msk: datetime, hours: List[int]) -> datetime:
+    slots = [msk.replace(hour=h, minute=0, second=0, microsecond=0) for h in hours]
+    past = [s for s in slots if s <= msk]
+    return max(past) if past else max(slots) - timedelta(days=1)
+
+
+def size_check_due(state: Dict[str, Any], msk: datetime, hours: List[int]) -> bool:
+    last = state.get("last_size_check")
+    return not last or datetime.fromisoformat(last) < last_size_slot(msk, hours)
+
+
+def half_budget(settings: Settings) -> float:
+    keys = sum(1 for k in settings.firecrawl_keys if k)
+    # два ключа — у каждого своя половина месяца; один ключ — делим его лимит пополам
+    return settings.credits_per_key if keys >= 2 else settings.credits_per_key / 2
+
+
+def budget_allows(used: int, cost: int, settings: Settings, msk: datetime, end: datetime) -> bool:
+    """Хватит ли кредитов до конца половины месяца, если сейчас потратить `cost`.
+    Резерв — на обычные проверки (по 1 кредиту) и редкие события."""
+    remaining_days = max(0.0, (end - msk).total_seconds() / 86400)
+    reserve = remaining_days * settings.runs_per_day * 1.1 + 30
+    return used + cost + reserve <= half_budget(settings)
 
 
 # ------------------------------------------------------------------ fetching
@@ -84,227 +126,282 @@ def fetch_product(fetcher: Fetcher, site: Site, tile: Tile) -> Dict[str, ColorIn
         try:
             extra = parse_product(fetcher.get(site.product_url(tile.slug, color), site, PRODUCT_MARKER),
                                   tile.slug)
-            data.setdefault(color, extra.get(color) or ColorInfo(None, None, []))
+            data[color] = extra.get(color) or ColorInfo(None, None, [])
         except (FetchError, ParseError) as exc:
             log.warning("%s: цвет %s товара %s не загрузился: %s", site.code, color, tile.slug, exc)
     return data
 
 
-# ------------------------------------------------------------------ snapshot
-def build_snapshot(tiles_by_site: Dict[str, List[Tile]],
-                   pdp_by_site: Dict[Tuple[str, str], Optional[Dict[str, ColorInfo]]],
-                   site_order: List[str]) -> Dict[str, Dict[str, Any]]:
+# ------------------------------------------------------------------ helpers
+def items_from_tiles(tiles: List[Tile]) -> Dict[str, Dict[str, Any]]:
     """Ключ вещи: "<styleNumber>_<colorCode>" — одинаковый на DE и UK."""
-    by_style: Dict[str, Dict[str, Tile]] = {}
-    for code in site_order:
-        for t in tiles_by_site.get(code, []):
-            by_style.setdefault(t.style, {})[code] = t
-
-    snapshot: Dict[str, Dict[str, Any]] = {}
-    for style, per_site in by_style.items():
-        colors: List[str] = []
-        for t in per_site.values():
-            colors += [c for c in t.colors if c not in colors]
-        # английское название (UK) приоритетнее
-        name_tile = per_site.get("uk") or next(iter(per_site.values()))
-        for color in colors:
-            item = {
-                "style": style,
-                "color": color,
-                "name": name_tile.name,
-                "color_name": next((t.colors.get(color) for t in (per_site.get("uk"), per_site.get("de"))
-                                    if t and t.colors.get(color)), ""),
-                "sites": {},
+    out: Dict[str, Dict[str, Any]] = {}
+    for t in tiles:
+        for color, color_name in t.colors.items():
+            out[f"{t.style}_{color}"] = {
+                "style": t.style, "color": color, "name": t.name, "color_name": color_name,
+                "slug": t.slug, "price": t.price, "full_price": t.full_price,
+                "sold_out": t.sold_out, "multi": len(t.colors) > 1,
+                "sizes": None, "fresh": False,
             }
-            for code, t in per_site.items():
-                if color not in t.colors:
-                    continue
-                attempted = (code, style) in pdp_by_site
-                pdp = pdp_by_site.get((code, style))
-                info = pdp.get(color) if pdp else None
-                if info and info.price is not None:
-                    entry = {"price": info.price, "full_price": info.full_price or t.full_price,
-                             "sizes": info.sizes}
-                else:
-                    entry = {"price": t.price, "full_price": t.full_price, "sizes": None}
-                    if attempted and pdp is None:
-                        entry["_pdp_failed"] = True
-                entry["slug"] = t.slug
-                item["sites"][code] = entry
-            snapshot[f"{style}_{color}"] = item
-    return snapshot
+    return out
 
 
-# ------------------------------------------------------------------ diff
-def site_discounted(s: Dict[str, Any]) -> bool:
-    p, f = s.get("price"), s.get("full_price")
+def is_discounted(d: Dict[str, Any]) -> bool:
+    p, f = d.get("price"), d.get("full_price")
     return p is not None and f is not None and p < f - EPS
 
 
-def item_discounted(item: Dict[str, Any]) -> bool:
-    return any(site_discounted(s) for s in item["sites"].values())
+def message_item(it: Dict[str, Any]) -> Dict[str, Any]:
+    return {
+        "style": it["style"], "color": it["color"], "name": it["name"],
+        "color_name": it["color_name"],
+        "uk": {"price": it["price"], "full_price": it["full_price"],
+               "sizes": it["sizes"], "slug": it["slug"]},
+        "de": it.get("de"),
+    }
 
 
-def item_sold_out(item: Dict[str, Any]) -> bool:
-    """True только если размеры известны для всех сайтов и их нигде нет."""
-    sizes = [s.get("sizes") for s in item["sites"].values()]
-    return bool(sizes) and all(sz is not None for sz in sizes) and not any(sizes)
-
-
-def detect_events(prev: Optional[Dict[str, Any]], cur: Dict[str, Any],
-                  initialized: bool) -> Tuple[List[str], Dict[str, Any]]:
-    if prev is None:
-        if initialized and item_discounted(cur) and not item_sold_out(cur):
-            return ["new"], {}
-        return [], {}
-
-    events: List[str] = []
-    prev_sites = prev.get("sites") or {}
-    drops: Dict[str, float] = {}
-    for code, s in cur["sites"].items():
-        old = (prev_sites.get(code) or {}).get("price")
-        if old is not None and s.get("price") is not None and s["price"] < old - EPS:
-            drops[code] = old
-    new_sizes: Dict[str, List[str]] = {}
-    if item_discounted(cur):
-        for code, s in cur["sites"].items():
-            old_sizes = (prev_sites.get(code) or {}).get("sizes")
-            if s.get("sizes") is None or old_sizes is None:
-                continue
-            added = [x for x in s["sizes"] if x not in old_sizes]
-            if added:
-                new_sizes[code] = added
-    if drops and not item_sold_out(cur):
-        events.append("drop")
-    if new_sizes:
-        events.append("sizes")
-    return events, {"drops": drops, "new_sizes": new_sizes}
-
-
-def merge_item(prev: Optional[Dict[str, Any]], cur: Dict[str, Any], today: str) -> Dict[str, Any]:
-    merged = copy.deepcopy(prev) if prev else {"first_seen": today}
-    sites = merged.get("sites") or {}
-    for code, s in cur["sites"].items():
-        entry = {k: v for k, v in s.items() if not k.startswith("_")}
-        sites[code] = entry
-    merged.update({k: cur[k] for k in ("style", "color", "name", "color_name")})
-    merged["sites"] = sites
-    merged["last_seen"] = today
-    return merged
-
-
-# ------------------------------------------------------------------ run
-def _maybe_alert(state: Dict[str, Any], telegram: Telegram, errors: Dict[str, str],
-                 settings: Settings, sites: List[Site], now: datetime) -> None:
+def _maybe_alert(state: Dict[str, Any], telegram: Telegram, error: str,
+                 settings: Settings, now: datetime) -> None:
     last = state.get("last_alert")
     if last and now - datetime.fromisoformat(last) < timedelta(hours=settings.alert_every_hours):
         return
-    flags = {s.code: s.flag for s in sites}
-    lines = ["⚠️ <b>Не удалось загрузить Urban Outfitters</b>"]
-    for code, err in errors.items():
-        lines.append(f"{flags.get(code, code)} {escape(err[:300])}")
-    if not settings.firecrawl_key and not settings.proxy_url:
-        lines.append("\nСкорее всего, сайт блокирует серверы GitHub. Добавьте секрет "
-                     "<code>FIRECRAWL_API_KEY</code> или <code>PROXY_URL</code> (см. README).")
+    lines = ["⚠️ <b>Не удалось загрузить Urban Outfitters (UK)</b>", escape(error[:600])]
+    if not any(settings.firecrawl_keys) and not settings.proxy_url:
+        lines.append("\nСайт блокирует серверы GitHub. Добавьте секрет "
+                     "<code>FIRECRAWL_API_KEY</code> (см. README).")
     telegram.send_text("\n".join(lines))
     state["last_alert"] = now.isoformat()
 
 
-def run(settings: Settings, sites: List[Site], fetcher: Fetcher, telegram: Telegram,
+# ------------------------------------------------------------------ run
+def run(settings: Settings, sites: Dict[str, Site], fetcher: Fetcher, telegram: Telegram,
         now: Optional[datetime] = None) -> Dict[str, Any]:
     now = now or datetime.now(timezone.utc)
-    today = now.date().isoformat()
+    msk = now.astimezone(MSK)
+    today = msk.date().isoformat()
     state = load_state(settings.state_path)
-    test_mode = settings.mode == "test"
-    site_order = [s.code for s in sites]
-
-    # 1. Листинги
-    tiles_by_site: Dict[str, List[Tile]] = {}
-    errors: Dict[str, str] = {}
-    for site in sites:
-        try:
-            tiles_by_site[site.code] = fetch_listing(fetcher, site)
-        except (FetchError, ParseError) as exc:
-            errors[site.code] = str(exc)
-            log.error("%s: листинг не загрузился: %s", site.code, exc)
-        fetcher.pause()
-    site_ok = {s.code: s.code in tiles_by_site for s in sites}
-
-    if errors:
-        print(f"::warning::Не загрузились: {', '.join(errors)}")
-        _maybe_alert(state, telegram, errors, settings, sites, now)
-    if not tiles_by_site:
-        if not test_mode:
-            save_state(settings.state_path, state)
-        return {"events": 0, "errors": errors}
-    if not errors:
-        state.pop("last_alert", None)
-
-    # 2. Карточки товаров — только для вещей со скидкой (нужны размеры и цены по цветам)
-    discounted_styles = {t.style for tiles in tiles_by_site.values() for t in tiles if t.discounted}
-    pdp_by_site: Dict[Tuple[str, str], Optional[Dict[str, ColorInfo]]] = {}
-    site_by_code = {s.code: s for s in sites}
-    for code, tiles in tiles_by_site.items():
-        for t in tiles:
-            if t.style not in discounted_styles:
-                continue
-            try:
-                pdp_by_site[(code, t.style)] = fetch_product(fetcher, site_by_code[code], t)
-            except (FetchError, ParseError) as exc:
-                log.warning("%s: карточка %s не загрузилась: %s", code, t.slug, exc)
-                pdp_by_site[(code, t.style)] = None
-
-    snapshot = build_snapshot(tiles_by_site, pdp_by_site, site_order)
-    items = state["items"]
-
-    # если карточка не загрузилась — берём размеры с прошлой проверки, чтобы не было ложных событий
-    for key, cur in snapshot.items():
-        for code, s in cur["sites"].items():
-            if s.get("_pdp_failed"):
-                s["sizes"] = ((items.get(key) or {}).get("sites", {}).get(code) or {}).get("sizes")
-
-    # 3. Тестовый режим: показать текущие скидки и выйти, ничего не сохраняя
-    if test_mode:
-        disc = [it for it in snapshot.values() if item_discounted(it)]
-        summary = (f"🧪 <b>Тест бота</b>\nНайдено вещей: "
-                   + ", ".join(f"{s.flag} {len(tiles_by_site.get(s.code, []))}" for s in sites)
-                   + f"\nСо скидкой сейчас: {len(disc)}"
-                   + f"\nЗагрузка: {dict(fetcher.used) or '—'}")
-        telegram.send_text(summary)
-        for it in disc[: settings.test_limit]:
-            telegram.send_item(build_caption(it, ["test"], {}, sites, site_ok), image_url(it),
-                               build_buttons(it, sites))
-        return {"events": len(disc[: settings.test_limit]), "errors": errors}
-
-    # 4. Сравнение и уведомления
+    items: Dict[str, Dict[str, Any]] = state["items"]
     initialized = state["initialized"]
-    sent = 0
-    for key, cur in snapshot.items():
-        prev = items.get(key)
-        events, details = detect_events(prev, cur, initialized)
-        if events:
-            log.info("Событие %s: %s %s", events, key, cur["name"])
-            telegram.send_item(build_caption(cur, events, details, sites, site_ok), image_url(cur),
-                               build_buttons(cur, sites))
-            sent += 1
-        items[key] = merge_item(prev, cur, today)
+    test = settings.mode == "test"
+    uk, de = sites["uk"], sites["de"]
+
+    period, _, period_end, _ = half_period(msk)
+    credits = state.get("credits") or {}
+    if credits.get("period") != period:
+        credits = {"period": period, "used": {}, "warned": []}
+    state["credits"] = credits
+
+    def warn_once(tag: str, text: str) -> None:
+        if tag not in credits["warned"]:
+            telegram.send_text(text)
+            credits["warned"].append(tag)
+
+    def finish(result: Dict[str, Any]) -> Dict[str, Any]:
+        for label, n in fetcher.credits.items():
+            credits["used"][label] = credits["used"].get(label, 0) + n
+        for label in sorted(fetcher.exhausted):
+            warn_once(f"exhausted{label}",
+                      f"⚠️ Ключ Firecrawl {label}: закончились кредиты или ключ недействителен. "
+                      + ("Работаю через другой ключ." if fetcher.active_key
+                         else "Других рабочих ключей нет — проверки не идут, пока не пополнится."))
+        state["heartbeat"] = today
+        save_state(settings.state_path, state)
+        log.info("Итог: %s; списано кредитов: %s; загрузки: %s",
+                 result, dict(fetcher.credits), dict(fetcher.used))
+        return result
+
+    # 1. Страница бренда UK — каждый запуск
+    try:
+        uk_tiles = fetch_listing(fetcher, uk)
+    except (FetchError, ParseError) as exc:
+        log.error("UK: листинг не загрузился: %s", exc)
+        print(f"::warning::Страница UK не загрузилась: {exc}")
+        _maybe_alert(state, telegram, str(exc), settings, now)
+        return finish({"events": 0, "error": str(exc)})
+    state.pop("last_alert", None)
+    tiles = {t.style: t for t in uk_tiles}
+    order = [t.style for t in uk_tiles]
+    cur = items_from_tiles(uk_tiles)
+    discounted = [s for s in order if tiles[s].discounted and not tiles[s].sold_out]
+
+    # 2. Для каких вещей открыть карточку UK (размеры)
+    need: Set[str] = set()
+    # минимальная известная цена по каждой вещи (у многоцветных в листинге цена общая — самая низкая)
+    prev_min: Dict[str, float] = {}
+    for key, it in cur.items():
+        p = ((items.get(key) or {}).get("uk") or {}).get("price")
+        if p is not None:
+            prev_min[it["style"]] = min(p, prev_min.get(it["style"], p))
+    for key, it in cur.items():
+        prev_uk = (items.get(key) or {}).get("uk") or {}
+        style, t = it["style"], tiles[it["style"]]
+        if key not in items:
+            if initialized and t.discounted and not t.sold_out:
+                need.add(style)                                        # новая вещь со скидкой
+        elif style in prev_min and t.price is not None and t.price < prev_min[style] - EPS:
+            need.add(style)                                            # цена снизилась
+        elif prev_uk.get("listing_sold_out") and not t.sold_out and t.discounted:
+            need.add(style)                                            # вернулась в наличие
+
+    if test:
+        need = set(discounted[: settings.test_limit])
+    elif not initialized or size_check_due(state, msk, settings.size_check_hours):
+        extra = [s for s in discounted if s not in need]
+        used = sum(credits["used"].values())
+        if not initialized or budget_allows(used, len(extra), settings, msk, period_end):
+            need.update(extra)
+            log.info("Плановая проверка размеров: %d вещей", len(extra))
+        else:
+            log.warning("Проверка размеров пропущена: бережём кредиты до конца половины месяца")
+            warn_once("budget", "ℹ️ Кредиты Firecrawl расходуются быстрее плана — до конца половины "
+                                "месяца проверяю размеры реже. Цены и новые вещи проверяются как обычно.")
+        state["last_size_check"] = now.isoformat()
+
+    pdp: Dict[str, Optional[Dict[str, ColorInfo]]] = {}
+    for style in [s for s in order if s in need]:
+        try:
+            pdp[style] = fetch_product(fetcher, uk, tiles[style])
+        except (FetchError, ParseError) as exc:
+            log.warning("UK: карточка %s не загрузилась: %s", tiles[style].slug, exc)
+            pdp[style] = None
+
+    # 3. Уточняем цены и размеры по карточкам
+    for key, it in cur.items():
+        prev_uk = (items.get(key) or {}).get("uk") or {}
+        style = it["style"]
+        it["sizes"] = prev_uk.get("sizes")
+        if style in pdp:
+            data = pdp[style]
+            if data is None:
+                it["unreliable"] = True          # карточка не загрузилась — событий по вещи не делаем
+                continue
+            info = data.get(it["color"])
+            if info:
+                if info.price is not None:
+                    it["price"] = info.price
+                if info.full_price is not None:
+                    it["full_price"] = info.full_price
+                it["sizes"], it["sold_out"], it["fresh"] = info.sizes, not info.sizes, True
+                continue
+        if it["multi"] and prev_uk.get("price") is not None:
+            # у многоцветных вещей цена в листинге общая на все цвета — держим точную цену цвета
+            it["price"] = prev_uk["price"]
+            it["full_price"] = prev_uk.get("full_price", it["full_price"])
+
+    # 4. События
+    events: Dict[str, Tuple[List[str], Dict[str, Any]]] = {}
+    if not test:
+        for key, it in cur.items():
+            if it.get("unreliable"):
+                continue
+            prev = items.get(key)
+            prev_uk = (prev or {}).get("uk") or {}
+            disc = is_discounted(it)
+            unavailable = it["sold_out"] or (it["fresh"] and not it["sizes"])
+            types: List[str] = []
+            det: Dict[str, Any] = {"drops": {}, "new_sizes": []}
+            if prev is None:
+                if initialized and disc and not unavailable:
+                    types.append("new")
+            else:
+                old = prev_uk.get("price")
+                if old is not None and it["price"] is not None and it["price"] < old - EPS \
+                        and not unavailable:
+                    types.append("drop")
+                    det["drops"]["uk"] = old
+                if disc and it["fresh"] and prev_uk.get("sizes") is not None and is_discounted(prev_uk):
+                    added = [s for s in it["sizes"] if s not in prev_uk["sizes"]]
+                    if added:
+                        types.append("back" if not prev_uk["sizes"] else "sizes")
+                        det["new_sizes"] = added
+                elif disc and it["fresh"] and it["sizes"] and prev_uk.get("listing_sold_out") \
+                        and "drop" not in types:
+                    types.append("back")
+            if types:
+                events[key] = (types, det)
+
+    # 5. Цены DE — только если есть что отправить
+    msg_keys = list(events) if not test else [k for k, it in cur.items()
+                                              if it["style"] in need and is_discounted(it)]
+    if msg_keys:
+        try:
+            de_tiles: Optional[Dict[str, Tile]] = {t.style: t for t in fetch_listing(fetcher, de)}
+        except (FetchError, ParseError) as exc:
+            log.warning("DE: листинг не загрузился: %s", exc)
+            de_tiles = None
+        de_pdp: Dict[str, Optional[Dict[str, ColorInfo]]] = {}
+        for key in msg_keys:
+            it = cur[key]
+            prev_de = (items.get(key) or {}).get("de") or {}
+            fresh_de: Optional[Dict[str, Any]] = None
+            if de_tiles is not None and it["style"] in de_tiles:
+                t = de_tiles[it["style"]]
+                fresh_de = {"price": t.price, "full_price": t.full_price, "slug": t.slug}
+            elif de_tiles is not None:
+                # в листинге DE не нашли — открываем карточку DE (тот же адрес, что на UK)
+                if it["style"] not in de_pdp:
+                    try:
+                        de_pdp[it["style"]] = fetch_product(fetcher, de, tiles[it["style"]])
+                    except (FetchError, ParseError) as exc:
+                        log.warning("DE: карточка %s не загрузилась: %s", it["slug"], exc)
+                        de_pdp[it["style"]] = None
+                info = (de_pdp[it["style"]] or {}).get(it["color"])
+                if info and info.price is not None:
+                    fresh_de = {"price": info.price, "full_price": info.full_price, "slug": it["slug"]}
+            if fresh_de:
+                fresh_de["checked"] = today
+                it["de"] = fresh_de
+                if key in events and prev_de.get("price") is not None \
+                        and fresh_de["price"] is not None and fresh_de["price"] < prev_de["price"] - EPS:
+                    events[key][1]["drops"]["de"] = prev_de["price"]
+            elif prev_de.get("price") is not None:
+                it["de"] = dict(prev_de, stale=True)
+
+    # 6. Уведомления
+    if test:
+        telegram.send_text(
+            f"🧪 <b>Тест бота</b>\nВещей на странице UK: {len(uk_tiles)}"
+            f"\nСо скидкой сейчас: {len(discounted)}"
+            f"\nКлюч Firecrawl: {fetcher.active_key or '—'}"
+            f"\nСписано за этот тест: {sum(fetcher.credits.values())}"
+            f"\nСписано за половину месяца: {sum(credits['used'].values()) + sum(fetcher.credits.values())}")
+        for key in msg_keys:
+            mi = message_item(cur[key])
+            telegram.send_item(build_caption(mi, ["test"], {}, sites), image_url(mi),
+                               build_buttons(mi, sites))
+        return finish({"events": len(msg_keys)})
+
+    for key, (types, det) in events.items():
+        mi = message_item(cur[key])
+        log.info("Событие %s: %s %s", types, key, mi["name"])
+        telegram.send_item(build_caption(mi, types, det, sites), image_url(mi), build_buttons(mi, sites))
+
+    # 7. Сохраняем состояние
+    for key, it in cur.items():
+        prev = items.get(key) or {"first_seen": today}
+        if not it.get("unreliable"):
+            prev.update({k: it[k] for k in ("style", "color", "name", "color_name")})
+            prev["uk"] = {k: it[k] for k in ("slug", "price", "full_price", "sold_out", "sizes")}
+            prev["uk"]["listing_sold_out"] = tiles[it["style"]].sold_out
+            if it.get("de") and not it["de"].get("stale"):
+                prev["de"] = it["de"]
+        prev["last_seen"] = today
+        items[key] = prev
 
     if not initialized:
         state["initialized"] = True
-        disc = sum(1 for it in snapshot.values() if item_discounted(it))
         telegram.send_text(
-            "✅ <b>Бот запущен</b>\nОтслеживаю Jaded London (мужское): "
-            + ", ".join(f"{s.flag} {len(tiles_by_site.get(s.code, []))} шт." for s in sites)
-            + f"\nСейчас со скидкой: {disc}.\n\nБуду присылать: новые вещи со скидкой, "
-              "снижение цены и новые размеры у вещей со скидкой."
+            "✅ <b>Бот запущен</b>\n"
+            f"Jaded London, мужское: на странице UK {len(uk_tiles)} вещей, со скидкой {len(discounted)}.\n\n"
+            "Проверка цен и новых вещей — каждые 30 минут (пауза 2:00–7:00 МСК), "
+            f"размеров — в {', '.join(f'{h}:00' for h in settings.size_check_hours)} МСК.\n"
+            "Буду присылать: новые вещи со скидкой, снижение цены, новые размеры и возврат в наличие."
         )
 
-    # 5. Чистка давно пропавших вещей
-    cutoff = (now - timedelta(days=PRUNE_AFTER_DAYS)).date().isoformat()
+    cutoff = (msk - timedelta(days=PRUNE_AFTER_DAYS)).date().isoformat()
     for key in [k for k, v in items.items() if v.get("last_seen", today) < cutoff]:
         del items[key]
 
-    state["heartbeat"] = today
-    save_state(settings.state_path, state)
-    log.info("Готово: уведомлений %d, загрузка %s", sent, dict(fetcher.used))
-    return {"events": sent, "errors": errors}
+    return finish({"events": len(events)})

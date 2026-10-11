@@ -1,15 +1,18 @@
 """Загрузка HTML страниц.
 
-Сайт защищён DataDome. Порядок попыток:
-  1. напрямую через curl_cffi (TLS-отпечаток настоящего Chrome), при желании через PROXY_URL;
-  2. через Firecrawl API, если задан FIRECRAWL_API_KEY (их браузер и прокси проходят защиту).
-Если прямой запрос заблокирован и есть Firecrawl, до конца запуска сразу идём через Firecrawl.
+Сайт закрыт антиботом DataDome, с серверов GitHub напрямую он не пускает,
+поэтому основной путь — Firecrawl API. Ключей может быть два: ключ №1 используется
+с 1 по 15 число, ключ №2 — с 16-го до конца месяца. Если у активного ключа закончились
+кредиты (HTTP 402) или он недействителен (401), бот сам переходит на другой.
+
+Прямая загрузка (curl_cffi с отпечатком Chrome) включается, если задан PROXY_URL
+или TRY_DIRECT=1, либо если ключей Firecrawl нет совсем.
 """
 import logging
 import random
 import time
 from collections import Counter
-from typing import Callable, List, Optional, Tuple
+from typing import List, Optional, Set, Tuple
 
 from curl_cffi import requests as cr
 
@@ -39,13 +42,27 @@ def describe(status: int, text: str) -> str:
 
 
 class Fetcher:
-    def __init__(self, proxy_url: Optional[str] = None, firecrawl_key: Optional[str] = None,
-                 impersonate: str = "chrome"):
-        proxies = {"http": proxy_url, "https": proxy_url} if proxy_url else None
-        self._session = cr.Session(impersonate=impersonate, proxies=proxies)
-        self.firecrawl_key = firecrawl_key
+    def __init__(self, firecrawl_keys: Optional[List[Optional[str]]] = None,
+                 preferred_key: int = 0, proxy_url: Optional[str] = None,
+                 try_direct: bool = False):
+        keys = [(f"№{i + 1}", k) for i, k in enumerate(firecrawl_keys or []) if k]
+        # активный ключ (по половине месяца) — первым, остальные — запасные
+        keys.sort(key=lambda lk: lk[0] != f"№{preferred_key + 1}")
+        self.keys: List[Tuple[str, str]] = keys
+        self.exhausted: Set[str] = set()          # ключи, у которых кончились кредиты в этом запуске
+        self.credits: Counter = Counter()         # списано кредитов по ключам
+        self.used: Counter = Counter()            # успешных загрузок по способам
+        self.use_direct = bool(proxy_url) or try_direct or not self.keys
         self._direct_blocked = False
-        self.used: Counter = Counter()
+        proxies = {"http": proxy_url, "https": proxy_url} if proxy_url else None
+        self._session = cr.Session(impersonate="chrome", proxies=proxies)
+
+    @property
+    def active_key(self) -> Optional[str]:
+        for label, _ in self.keys:
+            if label not in self.exhausted:
+                return label
+        return None
 
     # --- backends -------------------------------------------------------
     def _direct(self, url: str, site: Site) -> Tuple[int, str]:
@@ -60,10 +77,10 @@ class Fetcher:
         )
         return r.status_code, r.text
 
-    def _firecrawl(self, url: str, site: Site) -> Tuple[int, str]:
+    def _firecrawl(self, label: str, key: str, url: str, site: Site) -> Tuple[int, str]:
         r = cr.post(
             FIRECRAWL_URL,
-            headers={"Authorization": f"Bearer {self.firecrawl_key}"},
+            headers={"Authorization": f"Bearer {key}"},
             json={
                 "url": url,
                 "formats": ["rawHtml"],
@@ -75,44 +92,72 @@ class Fetcher:
             },
             timeout=150,
         )
+        if r.status_code in (401, 402):
+            self.exhausted.add(label)
+            reason = "закончились кредиты" if r.status_code == 402 else "ключ недействителен"
+            raise FetchError(f"Firecrawl {label}: {reason} (HTTP {r.status_code})")
+        if r.status_code == 429:
+            time.sleep(15)
+            raise FetchError(f"Firecrawl {label}: слишком много запросов (HTTP 429)")
         if r.status_code != 200:
-            raise FetchError(f"Firecrawl HTTP {r.status_code}: {r.text[:200]}")
+            raise FetchError(f"Firecrawl {label}: HTTP {r.status_code}: {r.text[:200]}")
+        self.credits[label] += 1
         data = (r.json() or {}).get("data") or {}
         status = int((data.get("metadata") or {}).get("statusCode") or 200)
         return status, data.get("rawHtml") or data.get("html") or ""
 
     # --- public ---------------------------------------------------------
     def get(self, url: str, site: Site, required_marker: str) -> str:
-        backends: List[Tuple[str, Callable[[str, Site], Tuple[int, str]]]] = []
-        if not self._direct_blocked or not self.firecrawl_key:
-            backends.append(("direct", self._direct))
-        if self.firecrawl_key:
-            backends.append(("firecrawl", self._firecrawl))
-
         errors: List[str] = []
-        for name, fn in backends:
-            for attempt in (1, 2):
+
+        if self.use_direct and not self._direct_blocked:
+            for _ in (1, 2):
                 try:
-                    status, text = fn(url, site)
-                except Exception as exc:  # сеть, таймаут, ошибка API
-                    errors.append(f"{name}: {exc}")
+                    status, text = self._direct(url, site)
+                except Exception as exc:
+                    errors.append(f"напрямую: {exc}")
                     time.sleep(3)
                     continue
                 if status == 200 and required_marker in text:
-                    self.used[name] += 1
+                    self.used["напрямую"] += 1
                     return text
-                errors.append(f"{name}: {describe(status, text)}")
-                if status == 404:
-                    break
-                if name == "direct" and is_blocked(status, text):
-                    if self.firecrawl_key:
-                        self._direct_blocked = True
+                errors.append(f"напрямую: {describe(status, text)}")
+                if is_blocked(status, text):
+                    if self.keys:
+                        self._direct_blocked = True   # до конца запуска — только Firecrawl
                         break
                     time.sleep(random.uniform(6, 12))
-                else:
+                elif status == 404:
+                    break
+
+        for label, key in self.keys:
+            if label in self.exhausted:
+                continue
+            for _ in (1, 2):
+                try:
+                    status, text = self._firecrawl(label, key, url, site)
+                except FetchError as exc:
+                    errors.append(str(exc))
+                    if label in self.exhausted:
+                        break
                     time.sleep(3)
+                    continue
+                except Exception as exc:
+                    errors.append(f"Firecrawl {label}: {exc}")
+                    time.sleep(3)
+                    continue
+                if status == 200 and required_marker in text:
+                    self.used[f"Firecrawl {label}"] += 1
+                    return text
+                errors.append(f"Firecrawl {label}: {describe(status, text)}")
+                if status == 404:
+                    break
+                time.sleep(3)
+
+        if not errors:
+            errors.append("нет ни одного способа загрузки (добавьте FIRECRAWL_API_KEY)")
         raise FetchError(f"{url} → " + " | ".join(errors))
 
     @staticmethod
     def pause() -> None:
-        time.sleep(random.uniform(1.0, 2.5))
+        time.sleep(random.uniform(0.5, 1.5))
