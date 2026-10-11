@@ -1,0 +1,13 @@
+{
+ "credits": {
+  "period": "2026-10-1",
+  "used": {
+   "№1": 5
+  },
+  "warned": []
+ },
+ "heartbeat": "2026-10-11",
+ "initialized": false,
+ "items": {},
+ "version": 2
+}
