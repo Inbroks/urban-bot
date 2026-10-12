@@ -246,8 +246,9 @@ def parse_product(page_html: str, slug: Optional[str] = None) -> Dict[str, Color
             size = str(s.get("size") or s.get("sizeId") or "?")
             if size not in sizes:
                 sizes.append(size)
-        price_pool = in_stock or skus
-        sale = [p for p in (_num(s.get("salePrice")) for s in price_pool) if p is not None]
+        # цена по всем размерам (как salePriceLow в листинге), а не только по тем, что в наличии —
+        # иначе распродажа самого дешёвого размера выглядела бы как изменение цены
+        sale = [p for p in (_num(s.get("salePrice")) for s in skus) if p is not None]
         lst = [p for p in (_num(s.get("listPrice")) for s in skus) if p is not None]
         result[color] = ColorInfo(
             price=min(sale) if sale else None,

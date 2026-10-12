@@ -10,11 +10,14 @@ from .config import Site
 
 log = logging.getLogger(__name__)
 
+CAPTION_LIMIT = 1024    # лимит подписи к фото в Telegram
+
 IMAGE_URL = ("https://imageseu.urbndata.com/is/image/UrbanOutfittersEU/"
              "{style}_{color}_a2?$xlarge$&fit=constrain&qlt=80&wid=800")
 
 TITLES = {
     "new": "🆕 <b>Новая вещь со скидкой</b>",
+    "new_full": "🆕 <b>Новая вещь</b>",
     "drop": "📉 <b>Цена снизилась</b>",
     "sizes": "📏 <b>Появились новые размеры</b>",
     "back": "🔁 <b>Снова в наличии</b>",
@@ -43,7 +46,7 @@ def discount_pct(price: Optional[float], full: Optional[float]) -> Optional[int]
 def _sizes_text(sizes: List[str], new: List[str]) -> str:
     if not sizes:
         return "нет в наличии"
-    return ", ".join(f"<b>{escape(s)}</b>🆕" if s in new else escape(s) for s in sizes)
+    return ", ".join(f"<b>{escape(s)}</b>" if s in new else escape(s) for s in sizes)
 
 
 def build_caption(item: Dict[str, Any], events: List[str], details: Dict[str, Any],
@@ -76,10 +79,12 @@ def build_caption(item: Dict[str, Any], events: List[str], details: Dict[str, An
     sizes = (item.get("uk") or {}).get("sizes")
     if sizes is not None:
         lines.append("")
-        lines.append("📏 Размеры: " + _sizes_text(sizes, details.get("new_sizes") or []))
+        new_sizes = [s for s in (details.get("new_sizes") or []) if s in sizes]
+        if new_sizes:
+            lines.append("➕ Появились: " + ", ".join(f"<b>{escape(s)}</b>" for s in new_sizes))
+        lines.append("📏 В наличии: " + _sizes_text(sizes, new_sizes))
 
-    caption = "\n".join(lines)
-    return caption if len(caption) <= 1024 else caption[:1020] + "…"
+    return "\n".join(lines)
 
 
 def build_buttons(item: Dict[str, Any], sites: Dict[str, Site]) -> List[List[Dict[str, str]]]:
@@ -126,28 +131,40 @@ class Telegram:
             return False
         return False
 
-    def send_item(self, caption: str, photo: str, buttons: List[List[Dict[str, str]]]) -> None:
+    def send_item(self, caption: str, photo: str, buttons: List[List[Dict[str, str]]]) -> bool:
+        """True, если сообщение дошло хотя бы до одного получателя."""
         if not self.enabled:
             log.info("[telegram выключен] %s", caption.replace("\n", " | "))
-            return
+            return True
         markup = json.dumps({"inline_keyboard": buttons}) if buttons else None
+        delivered = False
         for chat in self.chat_ids:
-            payload = {"chat_id": chat, "photo": photo, "caption": caption, "parse_mode": "HTML"}
-            if markup:
-                payload["reply_markup"] = markup
-            if not self._call("sendPhoto", payload):
+            ok = False
+            if len(caption) <= CAPTION_LIMIT:
+                payload = {"chat_id": chat, "photo": photo, "caption": caption, "parse_mode": "HTML"}
+                if markup:
+                    payload["reply_markup"] = markup
+                ok = self._call("sendPhoto", payload)
+            if not ok:
+                # фото не загрузилось или подпись слишком длинная — шлём текстом с превью картинки
                 text_payload = {"chat_id": chat, "text": caption, "parse_mode": "HTML",
-                                "link_preview_options": {"is_disabled": True}}
+                                "link_preview_options": {"url": photo, "prefer_large_media": True,
+                                                         "show_above_text": True}}
                 if markup:
                     text_payload["reply_markup"] = markup
-                self._call("sendMessage", text_payload)
+                ok = self._call("sendMessage", text_payload)
+            delivered = delivered or ok
             time.sleep(1.1)
+        return delivered
 
-    def send_text(self, text: str) -> None:
+    def send_text(self, text: str) -> bool:
         if not self.enabled:
             log.info("[telegram выключен] %s", text.replace("\n", " | "))
-            return
+            return True
+        delivered = False
         for chat in self.chat_ids:
-            self._call("sendMessage", {"chat_id": chat, "text": text, "parse_mode": "HTML",
-                                       "link_preview_options": {"is_disabled": True}})
+            ok = self._call("sendMessage", {"chat_id": chat, "text": text, "parse_mode": "HTML",
+                                            "link_preview_options": {"is_disabled": True}})
+            delivered = delivered or ok
             time.sleep(1.1)
+        return delivered

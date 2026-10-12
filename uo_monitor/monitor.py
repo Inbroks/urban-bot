@@ -105,12 +105,17 @@ def fetch_listing(fetcher: Fetcher, site: Site) -> List[Tile]:
         try:
             res = parse_listing(fetcher.get(_with_page(site.url, page), site, LISTING_MARKER))
         except (FetchError, ParseError) as exc:
-            log.warning("%s: страница %d не загрузилась: %s", site.code, page, exc)
+            if first.total_pages:
+                # страниц точно больше одной — неполный список дал бы ложные «пропажи» и «возвраты»
+                raise FetchError(f"{site.code}: страница {page} из {last} не загрузилась: {exc}")
+            log.info("%s: страницы %d нет (%s)", site.code, page, exc)
             break
         new = [t for t in res.tiles if t.style not in tiles]
         if not new:
             break
         tiles.update({t.style: t for t in new})
+    if not tiles:
+        raise ParseError(f"{site.code}: на странице бренда не найдено ни одной вещи (изменилась вёрстка?)")
     log.info("%s: найдено товаров: %d", site.code, len(tiles))
     return list(tiles.values())
 
@@ -238,10 +243,12 @@ def run(settings: Settings, sites: Dict[str, Site], fetcher: Fetcher, telegram: 
         prev_uk = (items.get(key) or {}).get("uk") or {}
         style, t = it["style"], tiles[it["style"]]
         if key not in items:
-            if initialized and t.discounted and not t.sold_out:
-                need.add(style)                                        # новая вещь со скидкой
+            if initialized and not t.sold_out:
+                need.add(style)                                        # новая вещь (любая)
         elif style in prev_min and t.price is not None and t.price < prev_min[style] - EPS:
             need.add(style)                                            # цена снизилась
+        elif items[key].get("missing") and not t.sold_out:
+            need.add(style)                                            # пропадала с сайта и вернулась
         elif prev_uk.get("listing_sold_out") and not t.sold_out and t.discounted:
             need.add(style)                                            # вернулась в наличие
 
@@ -279,10 +286,14 @@ def run(settings: Settings, sites: Dict[str, Site], fetcher: Fetcher, telegram: 
                 continue
             info = data.get(it["color"])
             if info:
-                if info.price is not None:
-                    it["price"] = info.price
-                if info.full_price is not None:
-                    it["full_price"] = info.full_price
+                # Цену с карточки берём только для многоцветных вещей (в листинге у них одна цена
+                # на все цвета). У одноцветных источник цены всегда листинг — иначе цены из двух
+                # источников могут расходиться и давать ложные «снижения».
+                if it["multi"]:
+                    if info.price is not None:
+                        it["price"] = info.price
+                    if info.full_price is not None:
+                        it["full_price"] = info.full_price
                 it["sizes"], it["sold_out"], it["fresh"] = info.sizes, not info.sizes, True
                 continue
         if it["multi"] and prev_uk.get("price") is not None:
@@ -303,8 +314,15 @@ def run(settings: Settings, sites: Dict[str, Site], fetcher: Fetcher, telegram: 
             types: List[str] = []
             det: Dict[str, Any] = {"drops": {}, "new_sizes": []}
             if prev is None:
-                if initialized and disc and not unavailable:
-                    types.append("new")
+                if initialized and not unavailable:
+                    types.append("new" if disc else "new_full")
+            elif prev.get("missing"):
+                if not unavailable and it["fresh"]:
+                    types.append("back")                               # вещь вернулась на сайт
+                    old = prev_uk.get("price")
+                    if old is not None and it["price"] is not None and it["price"] < old - EPS:
+                        types.insert(0, "drop")
+                        det["drops"]["uk"] = old
             else:
                 old = prev_uk.get("price")
                 if old is not None and it["price"] is not None and it["price"] < old - EPS \
@@ -373,22 +391,38 @@ def run(settings: Settings, sites: Dict[str, Site], fetcher: Fetcher, telegram: 
                                build_buttons(mi, sites))
         return finish({"events": len(msg_keys)})
 
+    failed: Set[str] = set()
     for key, (types, det) in events.items():
         mi = message_item(cur[key])
         log.info("Событие %s: %s %s", types, key, mi["name"])
-        telegram.send_item(build_caption(mi, types, det, sites), image_url(mi), build_buttons(mi, sites))
+        if not telegram.send_item(build_caption(mi, types, det, sites), image_url(mi),
+                                  build_buttons(mi, sites)):
+            failed.add(key)          # не отправилось — состояние не обновляем, повторим в следующий раз
 
     # 7. Сохраняем состояние
     for key, it in cur.items():
+        if key not in items and (it.get("unreliable") or key in failed):
+            continue                 # новая вещь, о которой не удалось сообщить, — останется «новой»
         prev = items.get(key) or {"first_seen": today}
-        if not it.get("unreliable"):
+        if not it.get("unreliable") and key not in failed:
             prev.update({k: it[k] for k in ("style", "color", "name", "color_name")})
             prev["uk"] = {k: it[k] for k in ("slug", "price", "full_price", "sold_out", "sizes")}
             prev["uk"]["listing_sold_out"] = tiles[it["style"]].sold_out
             if it.get("de") and not it["de"].get("stale"):
                 prev["de"] = it["de"]
+            prev.pop("missing", None)
         prev["last_seen"] = today
         items[key] = prev
+
+    # Вещи, которых больше нет на странице, помечаем — если вернутся, придёт «Снова в наличии».
+    # Если пропало больше половины известных вещей разом, это скорее сбой сайта: не помечаем.
+    gone = [k for k in items if k not in cur and not items[k].get("missing")]
+    present = sum(1 for k in items if k in cur)
+    if gone and len(gone) <= max(3, present):
+        for k in gone:
+            items[k]["missing"] = True
+    elif gone:
+        log.warning("Пропало слишком много вещей сразу (%d) — не помечаю их как пропавшие", len(gone))
 
     if not initialized:
         state["initialized"] = True
@@ -397,7 +431,8 @@ def run(settings: Settings, sites: Dict[str, Site], fetcher: Fetcher, telegram: 
             f"Jaded London, мужское: на странице UK {len(uk_tiles)} вещей, со скидкой {len(discounted)}.\n\n"
             "Проверка цен и новых вещей — каждые 30 минут (пауза 2:00–7:00 МСК), "
             f"размеров — в {', '.join(f'{h}:00' for h in settings.size_check_hours)} МСК.\n"
-            "Буду присылать: новые вещи со скидкой, снижение цены, новые размеры и возврат в наличие."
+            "Буду присылать: все новые вещи (со скидкой и без), снижение цены, "
+            "новые размеры и возврат в наличие."
         )
 
     cutoff = (msk - timedelta(days=PRUNE_AFTER_DAYS)).date().isoformat()
