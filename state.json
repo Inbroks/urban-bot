@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-1",
   "used": {
-   "№1": 24
+   "№1": 25
   },
   "warned": []
  },
@@ -270,6 +270,7 @@
    "color_name": "Blue",
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-11",
+   "missing": true,
    "name": "Jaded London Fake Check Shirt",
    "style": "0282382100007",
    "uk": {
@@ -381,6 +382,7 @@
    "color_name": "Indigo",
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-12",
+   "missing": true,
    "name": "Jaded London Jinx Balloon Jeans",
    "style": "0283382100028",
    "uk": {
