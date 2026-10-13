@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-1",
   "used": {
-   "№1": 29
+   "№1": 33
   },
   "warned": []
  },
@@ -338,7 +338,6 @@
     "listing_sold_out": false,
     "price": 26.0,
     "sizes": [
-     "34",
      "36"
     ],
     "slug": "jaded-london-bleached-colossus-jorts2",
@@ -573,6 +572,6 @@
    }
   }
  },
- "last_size_check": "2026-10-13T11:29:03.721732+00:00",
+ "last_size_check": "2026-10-13T18:28:13.723610+00:00",
  "version": 2
 }
