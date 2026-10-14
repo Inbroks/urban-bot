@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-1",
   "used": {
-   "№1": 36
+   "№1": 40
   },
   "warned": []
  },
@@ -148,6 +148,7 @@
    },
    "first_seen": "2026-10-14",
    "last_seen": "2026-10-14",
+   "missing": true,
    "name": "Jaded London Blessed Henley Tee",
    "style": "0281382100023",
    "uk": {
@@ -596,6 +597,6 @@
    }
   }
  },
- "last_size_check": "2026-10-13T18:28:13.723610+00:00",
+ "last_size_check": "2026-10-14T09:21:02.031567+00:00",
  "version": 2
 }
