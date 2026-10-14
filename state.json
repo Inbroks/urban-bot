@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-1",
   "used": {
-   "№1": 41
+   "№1": 47
   },
   "warned": []
  },
@@ -239,6 +239,33 @@
     "price": 50.0,
     "sizes": null,
     "slug": "jaded-london-reversible-varsity-graphic-tee",
+    "sold_out": false
+   }
+  },
+  "0281382100030_010": {
+   "color": "010",
+   "color_name": "White",
+   "de": {
+    "checked": "2026-10-14",
+    "full_price": 55.0,
+    "price": 55.0,
+    "slug": "jaded-london-white-long-sleeve-waffle-graphic-tee"
+   },
+   "first_seen": "2026-10-14",
+   "last_seen": "2026-10-14",
+   "name": "Jaded London White Long Sleeve Waffle Graphic Tee",
+   "style": "0281382100030",
+   "uk": {
+    "full_price": 45.0,
+    "listing_sold_out": false,
+    "price": 45.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
+    "slug": "jaded-london-white-long-sleeve-waffle-graphic-tee",
     "sold_out": false
    }
   },
@@ -597,6 +624,6 @@
    }
   }
  },
- "last_size_check": "2026-10-14T09:21:02.031567+00:00",
+ "last_size_check": "2026-10-14T19:12:39.881777+00:00",
  "version": 2
 }
