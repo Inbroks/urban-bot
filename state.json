@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 2
+   "№2": 8
   },
   "warned": []
  },
@@ -430,9 +430,14 @@
   "0283382100028_047": {
    "color": "047",
    "color_name": "Indigo",
+   "de": {
+    "checked": "2026-10-16",
+    "full_price": 119.0,
+    "price": 69.0,
+    "slug": "jaded-london-jinx-balloon-jeans2"
+   },
    "first_seen": "2026-10-11",
-   "last_seen": "2026-10-12",
-   "missing": true,
+   "last_seen": "2026-10-16",
    "name": "Jaded London Jinx Balloon Jeans",
    "style": "0283382100028",
    "uk": {
@@ -440,7 +445,7 @@
     "listing_sold_out": false,
     "price": 57.0,
     "sizes": [
-     "28"
+     "32"
     ],
     "slug": "jaded-london-jinx-balloon-jeans2",
     "sold_out": false
@@ -623,6 +628,6 @@
    }
   }
  },
- "last_size_check": "2026-10-15T18:30:32.226955+00:00",
+ "last_size_check": "2026-10-16T08:48:40.178718+00:00",
  "version": 2
 }
