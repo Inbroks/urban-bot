@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 8
+   "№2": 12
   },
   "warned": []
  },
@@ -377,6 +377,30 @@
     "sold_out": false
    }
   },
+  "0283382100021_040": {
+   "color": "040",
+   "color_name": "Blue",
+   "de": {
+    "checked": "2026-10-16",
+    "full_price": 99.0,
+    "price": 59.0,
+    "slug": "jaded-london-torn-low-rise-colossus-jeans2"
+   },
+   "first_seen": "2026-10-16",
+   "last_seen": "2026-10-16",
+   "name": "Jaded London Torn Low Rise Colossus Jeans",
+   "style": "0283382100021",
+   "uk": {
+    "full_price": 80.0,
+    "listing_sold_out": false,
+    "price": 48.0,
+    "sizes": [
+     "34"
+    ],
+    "slug": "jaded-london-torn-low-rise-colossus-jeans2",
+    "sold_out": false
+   }
+  },
   "0283382100022_040": {
    "color": "040",
    "color_name": "Blue",
@@ -592,6 +616,34 @@
     "price": 85.0,
     "sizes": null,
     "slug": "jaded-london-camo-carpenter-cargo-trousers",
+    "sold_out": false
+   }
+  },
+  "0283382100051_004": {
+   "color": "004",
+   "color_name": "Grey",
+   "de": {
+    "checked": "2026-10-16",
+    "full_price": 129.0,
+    "price": 129.0,
+    "slug": "jaded-london-grey-multi-badge-colossus-jeans"
+   },
+   "first_seen": "2026-10-16",
+   "last_seen": "2026-10-16",
+   "name": "Jaded London Grey Multi Badge Colossus Jeans",
+   "style": "0283382100051",
+   "uk": {
+    "full_price": 100.0,
+    "listing_sold_out": false,
+    "price": 100.0,
+    "sizes": [
+     "26",
+     "28",
+     "30",
+     "32",
+     "34"
+    ],
+    "slug": "jaded-london-grey-multi-badge-colossus-jeans",
     "sold_out": false
    }
   },
