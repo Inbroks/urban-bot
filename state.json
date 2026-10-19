@@ -2,13 +2,37 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 56
+   "№2": 59
   },
   "warned": []
  },
  "heartbeat": "2026-10-19",
  "initialized": true,
  "items": {
+  "0281382100007_004": {
+   "color": "004",
+   "color_name": "Grey",
+   "de": {
+    "checked": "2026-10-19",
+    "full_price": 95.0,
+    "price": 95.0,
+    "slug": "jaded-london-ldn-stud-monster-hoodie2"
+   },
+   "first_seen": "2026-10-19",
+   "last_seen": "2026-10-19",
+   "name": "Jaded London LDN Stud Monster Hoodie",
+   "style": "0281382100007",
+   "uk": {
+    "full_price": 75.0,
+    "listing_sold_out": false,
+    "price": 75.0,
+    "sizes": [
+     "L"
+    ],
+    "slug": "jaded-london-ldn-stud-monster-hoodie2",
+    "sold_out": false
+   }
+  },
   "0281382100010_048": {
    "color": "048",
    "color_name": "Light Blue",
