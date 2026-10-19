@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 50
+   "№2": 56
   },
   "warned": []
  },
@@ -382,14 +382,13 @@
    "color": "040",
    "color_name": "Blue",
    "de": {
-    "checked": "2026-10-16",
+    "checked": "2026-10-19",
     "full_price": 99.0,
     "price": 59.0,
     "slug": "jaded-london-torn-low-rise-colossus-jeans2"
    },
    "first_seen": "2026-10-16",
-   "last_seen": "2026-10-18",
-   "missing": true,
+   "last_seen": "2026-10-19",
    "name": "Jaded London Torn Low Rise Colossus Jeans",
    "style": "0283382100021",
    "uk": {
@@ -397,7 +396,7 @@
     "listing_sold_out": false,
     "price": 48.0,
     "sizes": [
-     "34"
+     "30"
     ],
     "slug": "jaded-london-torn-low-rise-colossus-jeans2",
     "sold_out": false
@@ -711,6 +710,6 @@
    }
   }
  },
- "last_size_check": "2026-10-18T19:16:08.627678+00:00",
+ "last_size_check": "2026-10-19T09:40:42.986988+00:00",
  "version": 2
 }
