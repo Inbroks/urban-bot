@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 75
+   "№2": 85
   },
   "warned": []
  },
@@ -36,6 +36,12 @@
   "0281382100010_048": {
    "color": "048",
    "color_name": "Light Blue",
+   "de": {
+    "checked": "2026-10-21",
+    "full_price": 55.0,
+    "price": 39.0,
+    "slug": "jaded-london-make-noise-spliced-t-shirt"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-21",
    "name": "Jaded London Make Noise Spliced Graphic Tee",
@@ -43,8 +49,13 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 45.0,
-    "sizes": null,
+    "price": 36.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-make-noise-spliced-t-shirt",
     "sold_out": false
    }
@@ -116,6 +127,12 @@
   "0281382100017_010": {
    "color": "010",
    "color_name": "White",
+   "de": {
+    "checked": "2026-10-21",
+    "full_price": 69.0,
+    "price": 55.0,
+    "slug": "jaded-london-13-applique-linen-top"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-21",
    "name": "Jaded London 13 Applique Linen Top",
@@ -123,8 +140,13 @@
    "uk": {
     "full_price": 55.0,
     "listing_sold_out": false,
-    "price": 55.0,
-    "sizes": null,
+    "price": 44.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-13-applique-linen-top",
     "sold_out": false
    }
@@ -189,6 +211,12 @@
   "0281382100024_004": {
    "color": "004",
    "color_name": "Grey",
+   "de": {
+    "checked": "2026-10-21",
+    "full_price": 59.0,
+    "price": 49.0,
+    "slug": "jaded-london-charcoal-waffle-henley-long-sleeve-tee"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-21",
    "name": "Jaded London Charcoal Waffle Henley Long Sleeve Tee",
@@ -196,8 +224,14 @@
    "uk": {
     "full_price": 48.0,
     "listing_sold_out": false,
-    "price": 48.0,
-    "sizes": null,
+    "price": 40.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-charcoal-waffle-henley-long-sleeve-tee",
     "sold_out": false
    }
@@ -312,6 +346,12 @@
   "0281382100032_230": {
    "color": "230",
    "color_name": "Green",
+   "de": {
+    "checked": "2026-10-21",
+    "full_price": 59.0,
+    "price": 49.0,
+    "slug": "jaded-london-green-waffle-long-sleeve-henley-tee"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-21",
    "name": "Jaded London Green Waffle Long Sleeve Henley Tee",
@@ -319,8 +359,13 @@
    "uk": {
     "full_price": 48.0,
     "listing_sold_out": false,
-    "price": 48.0,
-    "sizes": null,
+    "price": 43.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-green-waffle-long-sleeve-henley-tee",
     "sold_out": false
    }
@@ -569,6 +614,12 @@
   "0283382100034_040": {
    "color": "040",
    "color_name": "Blue",
+   "de": {
+    "checked": "2026-10-21",
+    "full_price": 109.0,
+    "price": 95.0,
+    "slug": "jaded-london-italy-muse-straight-leg-jeans"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-21",
    "name": "Jaded London Italy Muse Straight Leg Jeans",
@@ -576,8 +627,13 @@
    "uk": {
     "full_price": 85.0,
     "listing_sold_out": false,
-    "price": 85.0,
-    "sizes": null,
+    "price": 76.0,
+    "sizes": [
+     "30",
+     "32",
+     "34",
+     "36"
+    ],
     "slug": "jaded-london-italy-muse-straight-leg-jeans",
     "sold_out": false
    }
@@ -735,6 +791,6 @@
    }
   }
  },
- "last_size_check": "2026-10-20T18:38:13.322140+00:00",
+ "last_size_check": "2026-10-21T09:10:54.834656+00:00",
  "version": 2
 }
