@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 85
+   "№2": 88
   },
   "warned": []
  },
@@ -434,6 +434,7 @@
    },
    "first_seen": "2026-10-13",
    "last_seen": "2026-10-21",
+   "missing": true,
    "name": "Jaded London Splatter Cinch Carpenter Jeans",
    "style": "0283382100018",
    "uk": {
@@ -712,6 +713,34 @@
     "slug": "jaded-london-striped-applique-joggers"
    },
    "first_seen": "2026-10-16",
+   "last_seen": "2026-10-21",
+   "name": "Jaded London Striped Applique Joggers",
+   "style": "0283382100050",
+   "uk": {
+    "full_price": 75.0,
+    "listing_sold_out": false,
+    "price": 75.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
+    "slug": "jaded-london-striped-applique-joggers",
+    "sold_out": false
+   }
+  },
+  "0283382100050_060": {
+   "color": "060",
+   "color_name": "Red",
+   "de": {
+    "checked": "2026-10-21",
+    "full_price": 95.0,
+    "price": 95.0,
+    "slug": "jaded-london-striped-applique-joggers"
+   },
+   "first_seen": "2026-10-21",
    "last_seen": "2026-10-21",
    "name": "Jaded London Striped Applique Joggers",
    "style": "0283382100050",
