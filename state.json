@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 107
+   "№2": 108
   },
   "warned": []
  },
@@ -542,7 +542,7 @@
     "price": 57.0,
     "sizes": [],
     "slug": "jaded-london-jinx-balloon-jeans2",
-    "sold_out": true
+    "sold_out": false
    }
   },
   "0283382100029_040": {
