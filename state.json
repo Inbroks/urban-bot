@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 132
+   "№2": 143
   },
   "warned": []
  },
@@ -370,6 +370,33 @@
     "sold_out": false
    }
   },
+  "0281382100033_060": {
+   "color": "060",
+   "color_name": "Red",
+   "de": {
+    "checked": "2026-10-23",
+    "full_price": 79.0,
+    "price": 79.0,
+    "slug": "jaded-london-red-sunfade-distressed-sweatshirt"
+   },
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "name": "Jaded London Red Sunfade Distressed Sweatshirt",
+   "style": "0281382100033",
+   "uk": {
+    "full_price": 65.0,
+    "listing_sold_out": false,
+    "price": 65.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
+    "slug": "jaded-london-red-sunfade-distressed-sweatshirt",
+    "sold_out": false
+   }
+  },
   "0281382100037_030": {
    "color": "030",
    "color_name": "Green",
@@ -427,14 +454,13 @@
    "color": "040",
    "color_name": "Blue",
    "de": {
-    "checked": "2026-10-13",
+    "checked": "2026-10-23",
     "full_price": 129.0,
     "price": 59.0,
     "slug": "jaded-london-splatter-cinch-carpenter-jeans2"
    },
    "first_seen": "2026-10-13",
-   "last_seen": "2026-10-21",
-   "missing": true,
+   "last_seen": "2026-10-23",
    "name": "Jaded London Splatter Cinch Carpenter Jeans",
    "style": "0283382100018",
    "uk": {
@@ -442,7 +468,7 @@
     "listing_sold_out": false,
     "price": 48.0,
     "sizes": [
-     "30"
+     "28"
     ],
     "slug": "jaded-london-splatter-cinch-carpenter-jeans2",
     "sold_out": false
@@ -534,6 +560,7 @@
    },
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-23",
+   "missing": true,
    "name": "Jaded London Jinx Balloon Jeans",
    "style": "0283382100028",
    "uk": {
@@ -871,6 +898,6 @@
    }
   }
  },
- "last_size_check": "2026-10-23T09:09:34.689360+00:00",
+ "last_size_check": "2026-10-23T18:37:02.618505+00:00",
  "version": 2
 }
