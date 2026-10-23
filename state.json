@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 118
+   "№2": 131
   },
   "warned": []
  },
@@ -452,14 +452,13 @@
    "color": "040",
    "color_name": "Blue",
    "de": {
-    "checked": "2026-10-19",
+    "checked": "2026-10-23",
     "full_price": 99.0,
     "price": 59.0,
     "slug": "jaded-london-torn-low-rise-colossus-jeans2"
    },
    "first_seen": "2026-10-16",
-   "last_seen": "2026-10-19",
-   "missing": true,
+   "last_seen": "2026-10-23",
    "name": "Jaded London Torn Low Rise Colossus Jeans",
    "style": "0283382100021",
    "uk": {
@@ -467,7 +466,7 @@
     "listing_sold_out": false,
     "price": 48.0,
     "sizes": [
-     "30"
+     "34"
     ],
     "slug": "jaded-london-torn-low-rise-colossus-jeans2",
     "sold_out": false
@@ -542,7 +541,7 @@
     "price": 57.0,
     "sizes": [],
     "slug": "jaded-london-jinx-balloon-jeans2",
-    "sold_out": false
+    "sold_out": true
    }
   },
   "0283382100029_040": {
@@ -628,7 +627,6 @@
     "price": 76.0,
     "sizes": [
      "30",
-     "32",
      "34",
      "36"
     ],
@@ -681,6 +679,34 @@
     "price": 70.0,
     "sizes": null,
     "slug": "jaded-london-green-divine-airbrush-straight-leg-joggers2",
+    "sold_out": false
+   }
+  },
+  "0283382100047_040": {
+   "color": "040",
+   "color_name": "Blue",
+   "de": {
+    "checked": "2026-10-23",
+    "full_price": 89.0,
+    "price": 89.0,
+    "slug": "jaded-london-blue-divine-airbrush-joggers"
+   },
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "name": "Jaded London Blue Divine Airbrush Joggers",
+   "style": "0283382100047",
+   "uk": {
+    "full_price": 70.0,
+    "listing_sold_out": false,
+    "price": 70.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
+    "slug": "jaded-london-blue-divine-airbrush-joggers",
     "sold_out": false
    }
   },
@@ -815,8 +841,35 @@
     "slug": "jaded-london-blue-distressed-gemstone-hardcore-jeans",
     "sold_out": false
    }
+  },
+  "0284382100007_000": {
+   "color": "000",
+   "color_name": "Assorted",
+   "de": {
+    "checked": "2026-10-23",
+    "full_price": 139.0,
+    "price": 139.0,
+    "slug": "jaded-london-camo-ripstop-field-jacket"
+   },
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "name": "Jaded London Camo Ripstop Field Jacket",
+   "style": "0284382100007",
+   "uk": {
+    "full_price": 110.0,
+    "listing_sold_out": false,
+    "price": 110.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
+    "slug": "jaded-london-camo-ripstop-field-jacket",
+    "sold_out": false
+   }
   }
  },
- "last_size_check": "2026-10-22T19:04:22.651918+00:00",
+ "last_size_check": "2026-10-23T09:09:34.689360+00:00",
  "version": 2
 }
