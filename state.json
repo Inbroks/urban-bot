@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 154
+   "№2": 155
   },
   "warned": []
  },
@@ -81,6 +81,7 @@
    "color_name": "Black",
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-24",
+   "missing": true,
    "name": "Jaded London UO Exclusive Kasper Printed Waffle T-Shirt",
    "style": "0281382100013",
    "uk": {
@@ -461,6 +462,7 @@
    },
    "first_seen": "2026-10-13",
    "last_seen": "2026-10-24",
+   "missing": true,
    "name": "Jaded London Splatter Cinch Carpenter Jeans",
    "style": "0283382100018",
    "uk": {
