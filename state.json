@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 240
+   "№2": 251
   },
   "warned": []
  },
@@ -37,7 +37,7 @@
    "color": "048",
    "color_name": "Light Blue",
    "de": {
-    "checked": "2026-10-21",
+    "checked": "2026-10-29",
     "full_price": 55.0,
     "price": 39.0,
     "slug": "jaded-london-make-noise-spliced-t-shirt"
@@ -51,6 +51,8 @@
     "listing_sold_out": false,
     "price": 36.0,
     "sizes": [
+     "S",
+     "M",
      "L",
      "XL"
     ],
@@ -453,14 +455,13 @@
    "color": "040",
    "color_name": "Blue",
    "de": {
-    "checked": "2026-10-23",
+    "checked": "2026-10-29",
     "full_price": 129.0,
     "price": 59.0,
     "slug": "jaded-london-splatter-cinch-carpenter-jeans2"
    },
    "first_seen": "2026-10-13",
-   "last_seen": "2026-10-24",
-   "missing": true,
+   "last_seen": "2026-10-29",
    "name": "Jaded London Splatter Cinch Carpenter Jeans",
    "style": "0283382100018",
    "uk": {
@@ -553,21 +554,22 @@
    "color": "047",
    "color_name": "Indigo",
    "de": {
-    "checked": "2026-10-16",
+    "checked": "2026-10-29",
     "full_price": 119.0,
     "price": 69.0,
     "slug": "jaded-london-jinx-balloon-jeans2"
    },
    "first_seen": "2026-10-11",
-   "last_seen": "2026-10-23",
-   "missing": true,
+   "last_seen": "2026-10-29",
    "name": "Jaded London Jinx Balloon Jeans",
    "style": "0283382100028",
    "uk": {
     "full_price": 95.0,
     "listing_sold_out": false,
     "price": 57.0,
-    "sizes": [],
+    "sizes": [
+     "30"
+    ],
     "slug": "jaded-london-jinx-balloon-jeans2",
     "sold_out": false
    }
@@ -898,6 +900,6 @@
    }
   }
  },
- "last_size_check": "2026-10-28T21:31:38.213400+00:00",
+ "last_size_check": "2026-10-29T10:44:53.793366+00:00",
  "version": 2
 }
