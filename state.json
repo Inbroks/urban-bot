@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 251
+   "№2": 252
   },
   "warned": []
  },
@@ -561,6 +561,7 @@
    },
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-29",
+   "missing": true,
    "name": "Jaded London Jinx Balloon Jeans",
    "style": "0283382100028",
    "uk": {
