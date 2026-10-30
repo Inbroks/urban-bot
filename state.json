@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 273
+   "№2": 276
   },
   "warned": []
  },
@@ -579,6 +579,7 @@
    "color_name": "Blue",
    "first_seen": "2026-10-11",
    "last_seen": "2026-10-30",
+   "missing": true,
    "name": "Jaded London Stars & Stripes Colossus Jeans",
    "style": "0283382100029",
    "uk": {
@@ -853,6 +854,34 @@
     "price": 90.0,
     "sizes": null,
     "slug": "jaded-london-mud-wash-blue-jude-bootcut-jeans",
+    "sold_out": false
+   }
+  },
+  "0283382100053_091": {
+   "color": "091",
+   "color_name": "Indigo",
+   "de": {
+    "checked": "2026-10-30",
+    "full_price": 119.0,
+    "price": 119.0,
+    "slug": "jaded-london-camo-applique-baggy-jeans"
+   },
+   "first_seen": "2026-10-30",
+   "last_seen": "2026-10-30",
+   "name": "Jaded London Camo Applique Baggy Jeans",
+   "style": "0283382100053",
+   "uk": {
+    "full_price": 95.0,
+    "listing_sold_out": false,
+    "price": 95.0,
+    "sizes": [
+     "28",
+     "30",
+     "32",
+     "34",
+     "36"
+    ],
+    "slug": "jaded-london-camo-applique-baggy-jeans",
     "sold_out": false
    }
   },
