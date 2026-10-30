@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 262
+   "№2": 273
   },
   "warned": []
  },
@@ -188,14 +188,13 @@
    "color": "004",
    "color_name": "Grey",
    "de": {
-    "checked": "2026-10-15",
+    "checked": "2026-10-30",
     "full_price": 55.0,
     "price": 55.0,
     "slug": "jaded-london-blessed-henley-tee"
    },
    "first_seen": "2026-10-14",
-   "last_seen": "2026-10-16",
-   "missing": true,
+   "last_seen": "2026-10-30",
    "name": "Jaded London Blessed Henley Tee",
    "style": "0281382100023",
    "uk": {
@@ -901,6 +900,6 @@
    }
   }
  },
- "last_size_check": "2026-10-29T21:56:05.736412+00:00",
+ "last_size_check": "2026-10-30T10:44:42.656027+00:00",
  "version": 2
 }
