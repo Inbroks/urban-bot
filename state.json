@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-10-2",
   "used": {
-   "№2": 287
+   "№2": 288
   },
   "warned": []
  },
@@ -461,6 +461,7 @@
    },
    "first_seen": "2026-10-13",
    "last_seen": "2026-10-31",
+   "missing": true,
    "name": "Jaded London Splatter Cinch Carpenter Jeans",
    "style": "0283382100018",
    "uk": {
