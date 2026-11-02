@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-1",
   "used": {
-   "№1": 19
+   "№1": 28
   },
   "warned": []
  },
@@ -504,6 +504,12 @@
   "0283382100022_040": {
    "color": "040",
    "color_name": "Blue",
+   "de": {
+    "checked": "2026-11-02",
+    "full_price": 69.0,
+    "price": 29.0,
+    "slug": "jaded-london-bleached-colossus-jorts2"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-02",
    "name": "Jaded London Bleached Colossus Jorts",
@@ -513,6 +519,7 @@
     "listing_sold_out": false,
     "price": 26.0,
     "sizes": [
+     "30",
      "36"
     ],
     "slug": "jaded-london-bleached-colossus-jorts2",
@@ -880,7 +887,7 @@
    },
    "first_seen": "2026-10-30",
    "last_seen": "2026-11-02",
-   "name": "Jaded London Camo Applique Baggy Jeans",
+   "name": "Jaded London Camo LDN Applique Baggy Jeans",
    "style": "0283382100053",
    "uk": {
     "full_price": 95.0,
@@ -893,7 +900,7 @@
      "34",
      "36"
     ],
-    "slug": "jaded-london-camo-applique-baggy-jeans",
+    "slug": "jaded-london-camo-ldn-applique-baggy-jeans",
     "sold_out": false
    }
   },
@@ -941,6 +948,6 @@
    }
   }
  },
- "last_size_check": "2026-11-01T21:20:38.681355+00:00",
+ "last_size_check": "2026-11-02T12:04:31.668077+00:00",
  "version": 2
 }
