@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-1",
   "used": {
-   "№1": 47
+   "№1": 55
   },
   "warned": []
  },
@@ -569,6 +569,7 @@
    },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-03",
+   "missing": true,
    "name": "Jaded London Jinx Balloon Jeans",
    "style": "0283382100028",
    "uk": {
@@ -886,6 +887,7 @@
    },
    "first_seen": "2026-10-30",
    "last_seen": "2026-11-03",
+   "missing": true,
    "name": "Jaded London Camo LDN Applique Baggy Jeans",
    "style": "0283382100053",
    "uk": {
@@ -947,6 +949,6 @@
    }
   }
  },
- "last_size_check": "2026-11-03T11:41:27.591409+00:00",
+ "last_size_check": "2026-11-03T19:12:12.935486+00:00",
  "version": 2
 }
