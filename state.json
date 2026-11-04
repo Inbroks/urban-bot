@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-1",
   "used": {
-   "№1": 61
+   "№1": 68
   },
   "warned": []
  },
@@ -880,14 +880,13 @@
    "color": "091",
    "color_name": "Indigo",
    "de": {
-    "checked": "2026-10-30",
+    "checked": "2026-11-04",
     "full_price": 119.0,
     "price": 119.0,
-    "slug": "jaded-london-camo-applique-baggy-jeans"
+    "slug": "jaded-london-camo-ldn-applique-baggy-jeans"
    },
    "first_seen": "2026-10-30",
-   "last_seen": "2026-11-03",
-   "missing": true,
+   "last_seen": "2026-11-04",
    "name": "Jaded London Camo LDN Applique Baggy Jeans",
    "style": "0283382100053",
    "uk": {
@@ -949,6 +948,6 @@
    }
   }
  },
- "last_size_check": "2026-11-04T11:54:04.752960+00:00",
+ "last_size_check": "2026-11-04T19:28:34.785823+00:00",
  "version": 2
 }
