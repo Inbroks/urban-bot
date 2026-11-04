@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-1",
   "used": {
-   "№1": 56
+   "№1": 61
   },
   "warned": []
  },
@@ -225,7 +225,7 @@
    "uk": {
     "full_price": 48.0,
     "listing_sold_out": false,
-    "price": 40.0,
+    "price": 48.0,
     "sizes": [
      "XS",
      "S",
@@ -360,7 +360,7 @@
    "uk": {
     "full_price": 48.0,
     "listing_sold_out": false,
-    "price": 43.0,
+    "price": 48.0,
     "sizes": [
      "S",
      "M",
@@ -674,7 +674,7 @@
    "uk": {
     "full_price": 85.0,
     "listing_sold_out": false,
-    "price": 76.0,
+    "price": 85.0,
     "sizes": [
      "30",
      "34",
@@ -949,6 +949,6 @@
    }
   }
  },
- "last_size_check": "2026-11-03T19:12:12.935486+00:00",
+ "last_size_check": "2026-11-04T11:54:04.752960+00:00",
  "version": 2
 }
