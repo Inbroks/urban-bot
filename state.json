@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-1",
   "used": {
-   "№1": 69
+   "№1": 74
   },
   "warned": []
  },
@@ -887,7 +887,7 @@
    },
    "first_seen": "2026-10-30",
    "last_seen": "2026-11-05",
-   "name": "Jaded London Camo LDN Applique Baggy Jeans",
+   "name": "Jaded London The Blessed Endeavour XL Colossus Jeans",
    "style": "0283382100053",
    "uk": {
     "full_price": 95.0,
@@ -900,7 +900,7 @@
      "34",
      "36"
     ],
-    "slug": "jaded-london-camo-ldn-applique-baggy-jeans",
+    "slug": "jaded-london-the-blessed-endeavour-xl-colossus-jeans",
     "sold_out": false
    }
   },
@@ -948,6 +948,6 @@
    }
   }
  },
- "last_size_check": "2026-11-04T19:28:34.785823+00:00",
+ "last_size_check": "2026-11-05T11:56:43.323474+00:00",
  "version": 2
 }
