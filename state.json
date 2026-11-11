@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-1",
   "used": {
-   "№1": 136
+   "№1": 145
   },
   "warned": []
  },
@@ -529,6 +529,12 @@
   "0283382100024_024": {
    "color": "024",
    "color_name": "Beige",
+   "de": {
+    "checked": "2026-11-11",
+    "full_price": 79.0,
+    "price": 55.0,
+    "slug": "jaded-london-distressed-beach-cargo-shorts2"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-11",
    "name": "Jaded London Distressed Beach Cargo Shorts",
@@ -536,9 +542,14 @@
    "uk": {
     "full_price": 65.0,
     "listing_sold_out": false,
-    "price": 65.0,
-    "sizes": null,
-    "slug": "jaded-london-distressed-beach-cargo-shorts",
+    "price": 45.0,
+    "sizes": [
+     "28",
+     "30",
+     "32",
+     "34"
+    ],
+    "slug": "jaded-london-distressed-beach-cargo-shorts2",
     "sold_out": false
    }
   },
@@ -629,6 +640,12 @@
   "0283382100032_040": {
    "color": "040",
    "color_name": "Blue",
+   "de": {
+    "checked": "2026-11-11",
+    "full_price": 109.0,
+    "price": 75.0,
+    "slug": "jaded-london-blue-jude-bootcut-jeans2"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-11",
    "name": "Jaded London Blue Jude Bootcut Jeans",
@@ -636,9 +653,12 @@
    "uk": {
     "full_price": 85.0,
     "listing_sold_out": false,
-    "price": 85.0,
-    "sizes": null,
-    "slug": "jaded-london-blue-jude-bootcut-jeans",
+    "price": 59.0,
+    "sizes": [
+     "34",
+     "36"
+    ],
+    "slug": "jaded-london-blue-jude-bootcut-jeans2",
     "sold_out": false
    }
   },
@@ -703,6 +723,12 @@
   "0283382100042_060": {
    "color": "060",
    "color_name": "Red",
+   "de": {
+    "checked": "2026-11-11",
+    "full_price": 65.0,
+    "price": 45.0,
+    "slug": "jaded-london-red-sport-stripe-monster-jogger-shorts2"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-11",
    "name": "Jaded London Red Sport Stripe Monster Jogger Shorts",
@@ -710,9 +736,15 @@
    "uk": {
     "full_price": 50.0,
     "listing_sold_out": false,
-    "price": 50.0,
-    "sizes": null,
-    "slug": "jaded-london-red-sport-stripe-monster-jogger-shorts",
+    "price": 35.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
+    "slug": "jaded-london-red-sport-stripe-monster-jogger-shorts2",
     "sold_out": false
    }
   },
@@ -948,6 +980,6 @@
    }
   }
  },
- "last_size_check": "2026-11-10T19:55:17.088842+00:00",
+ "last_size_check": "2026-11-11T11:43:04.673260+00:00",
  "version": 2
 }
