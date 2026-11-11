@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-1",
   "used": {
-   "№1": 145
+   "№1": 152
   },
   "warned": []
  },
@@ -648,6 +648,7 @@
    },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-11",
+   "missing": true,
    "name": "Jaded London Blue Jude Bootcut Jeans",
    "style": "0283382100032",
    "uk": {
@@ -980,6 +981,6 @@
    }
   }
  },
- "last_size_check": "2026-11-11T11:43:04.673260+00:00",
+ "last_size_check": "2026-11-11T19:20:13.720799+00:00",
  "version": 2
 }
