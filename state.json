@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-1",
   "used": {
-   "№1": 153
+   "№1": 162
   },
   "warned": []
  },
@@ -953,6 +953,34 @@
     "sold_out": false
    }
   },
+  "0284382100004_030": {
+   "color": "030",
+   "color_name": "Green",
+   "de": {
+    "checked": "2026-11-12",
+    "full_price": 115.0,
+    "price": 115.0,
+    "slug": "jaded-london-asymmetric-fencing-jacket"
+   },
+   "first_seen": "2026-11-12",
+   "last_seen": "2026-11-12",
+   "name": "Jaded London Asymmetric Fencing Jacket",
+   "style": "0284382100004",
+   "uk": {
+    "full_price": 90.0,
+    "listing_sold_out": false,
+    "price": 90.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
+    "slug": "jaded-london-asymmetric-fencing-jacket",
+    "sold_out": false
+   }
+  },
   "0284382100007_000": {
    "color": "000",
    "color_name": "Assorted",
@@ -981,6 +1009,6 @@
    }
   }
  },
- "last_size_check": "2026-11-11T19:20:13.720799+00:00",
+ "last_size_check": "2026-11-12T12:17:21.428486+00:00",
  "version": 2
 }
