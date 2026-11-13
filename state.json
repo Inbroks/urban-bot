@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-1",
   "used": {
-   "№1": 170
+   "№1": 178
   },
   "warned": []
  },
@@ -37,10 +37,10 @@
    "color": "048",
    "color_name": "Light Blue",
    "de": {
-    "checked": "2026-10-29",
+    "checked": "2026-11-13",
     "full_price": 55.0,
-    "price": 39.0,
-    "slug": "jaded-london-make-noise-spliced-t-shirt"
+    "price": 35.0,
+    "slug": "jaded-london-make-noise-spliced-t-shirt2"
    },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-13",
@@ -49,14 +49,14 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 36.0,
+    "price": 31.0,
     "sizes": [
      "S",
      "M",
      "L",
      "XL"
     ],
-    "slug": "jaded-london-make-noise-spliced-t-shirt",
+    "slug": "jaded-london-make-noise-spliced-t-shirt2",
     "sold_out": false
    }
   },
@@ -129,10 +129,10 @@
    "color": "010",
    "color_name": "White",
    "de": {
-    "checked": "2026-10-21",
+    "checked": "2026-11-13",
     "full_price": 69.0,
-    "price": 55.0,
-    "slug": "jaded-london-13-applique-linen-top"
+    "price": 45.0,
+    "slug": "jaded-london-13-applique-linen-top2"
    },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-13",
@@ -141,14 +141,14 @@
    "uk": {
     "full_price": 55.0,
     "listing_sold_out": false,
-    "price": 44.0,
+    "price": 38.0,
     "sizes": [
      "S",
      "M",
      "L",
      "XL"
     ],
-    "slug": "jaded-london-13-applique-linen-top",
+    "slug": "jaded-london-13-applique-linen-top2",
     "sold_out": false
    }
   },
@@ -1009,6 +1009,6 @@
    }
   }
  },
- "last_size_check": "2026-11-12T20:16:42.437610+00:00",
+ "last_size_check": "2026-11-13T11:55:56.873877+00:00",
  "version": 2
 }
