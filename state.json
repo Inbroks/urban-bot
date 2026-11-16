@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-2",
   "used": {
-   "№2": 1
+   "№2": 8
   },
   "warned": []
  },
@@ -51,7 +51,6 @@
     "listing_sold_out": false,
     "price": 31.0,
     "sizes": [
-     "S",
      "M",
      "L",
      "XL"
@@ -1008,6 +1007,6 @@
    }
   }
  },
- "last_size_check": "2026-11-15T18:34:35.313296+00:00",
+ "last_size_check": "2026-11-16T12:29:35.647264+00:00",
  "version": 2
 }
