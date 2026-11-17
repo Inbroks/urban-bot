@@ -2,7 +2,7 @@
  "credits": {
   "period": "2026-11-2",
   "used": {
-   "№2": 16
+   "№2": 25
   },
   "warned": []
  },
@@ -37,7 +37,7 @@
    "color": "048",
    "color_name": "Light Blue",
    "de": {
-    "checked": "2026-11-13",
+    "checked": "2026-11-17",
     "full_price": 55.0,
     "price": 35.0,
     "slug": "jaded-london-make-noise-spliced-t-shirt2"
@@ -51,6 +51,7 @@
     "listing_sold_out": false,
     "price": 31.0,
     "sizes": [
+     "S",
      "M",
      "L",
      "XL"
@@ -78,16 +79,23 @@
   "0281382100013_001": {
    "color": "001",
    "color_name": "Black",
+   "de": {
+    "checked": "2026-11-17",
+    "full_price": 55.0,
+    "price": 55.0,
+    "slug": "jaded-london-uo-exclusive-kasper-printed-waffle-t-shirt"
+   },
    "first_seen": "2026-10-11",
-   "last_seen": "2026-10-24",
-   "missing": true,
+   "last_seen": "2026-11-17",
    "name": "Jaded London UO Exclusive Kasper Printed Waffle T-Shirt",
    "style": "0281382100013",
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
     "price": 45.0,
-    "sizes": null,
+    "sizes": [
+     "XL"
+    ],
     "slug": "jaded-london-uo-exclusive-kasper-printed-waffle-t-shirt",
     "sold_out": false
    }
@@ -103,7 +111,10 @@
     "full_price": 45.0,
     "listing_sold_out": false,
     "price": 45.0,
-    "sizes": null,
+    "sizes": [
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-uo-exclusive-kasper-printed-waffle-t-shirt",
     "sold_out": false
    }
@@ -1007,6 +1018,6 @@
    }
   }
  },
- "last_size_check": "2026-11-16T22:27:46.663315+00:00",
+ "last_size_check": "2026-11-17T14:09:41.452229+00:00",
  "version": 2
 }
