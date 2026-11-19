@@ -2,7 +2,8 @@
  "credits": {
   "period": "2026-11-2",
   "used": {
-   "№2": 47
+   "№1": 1,
+   "№2": 65
   },
   "warned": []
  },
@@ -181,6 +182,12 @@
   "0281382100021_010": {
    "color": "010",
    "color_name": "White",
+   "de": {
+    "checked": "2026-11-19",
+    "full_price": 55.0,
+    "price": 39.0,
+    "slug": "jaded-london-echo-bitten-cropped-tee"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-19",
    "name": "Jaded London Echo Bitten Cropped Tee",
@@ -188,8 +195,14 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 45.0,
-    "sizes": null,
+    "price": 33.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-echo-bitten-cropped-tee",
     "sold_out": false
    }
@@ -250,6 +263,12 @@
   "0281382100025_000": {
    "color": "000",
    "color_name": "Assorted",
+   "de": {
+    "checked": "2026-11-19",
+    "full_price": 75.0,
+    "price": 55.0,
+    "slug": "jaded-london-adrenaline-checked-polo-shirt"
+   },
    "first_seen": "2026-10-13",
    "last_seen": "2026-11-19",
    "name": "Jaded London Adrenaline Checked Polo Shirt",
@@ -257,8 +276,14 @@
    "uk": {
     "full_price": 60.0,
     "listing_sold_out": false,
-    "price": 60.0,
-    "sizes": null,
+    "price": 45.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-adrenaline-checked-polo-shirt",
     "sold_out": false
    }
@@ -266,6 +291,12 @@
   "0281382100026_041": {
    "color": "041",
    "color_name": "Navy",
+   "de": {
+    "checked": "2026-11-19",
+    "full_price": 55.0,
+    "price": 39.0,
+    "slug": "jaded-london-navy-star-sun-faded-graphic-tee"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-19",
    "name": "Jaded London Navy Star Sun Faded Graphic Tee",
@@ -273,8 +304,13 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 45.0,
-    "sizes": null,
+    "price": 33.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-navy-star-sun-faded-graphic-tee",
     "sold_out": false
    }
@@ -282,6 +318,12 @@
   "0281382100028_072": {
    "color": "072",
    "color_name": "Yellow",
+   "de": {
+    "checked": "2026-11-19",
+    "full_price": 55.0,
+    "price": 39.0,
+    "slug": "jaded-london-yellow-heart-printed-tee"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-19",
    "name": "Jaded London Yellow Heart Printed Tee",
@@ -289,8 +331,13 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 45.0,
-    "sizes": null,
+    "price": 33.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-yellow-heart-printed-tee",
     "sold_out": false
    }
@@ -298,6 +345,12 @@
   "0281382100029_000": {
    "color": "000",
    "color_name": "Assorted",
+   "de": {
+    "checked": "2026-11-19",
+    "full_price": 65.0,
+    "price": 45.0,
+    "slug": "jaded-london-reversible-varsity-graphic-tee"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-19",
    "name": "Jaded London Reversible Varsity Graphic Tee",
@@ -305,8 +358,14 @@
    "uk": {
     "full_price": 50.0,
     "listing_sold_out": false,
-    "price": 50.0,
-    "sizes": null,
+    "price": 37.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-reversible-varsity-graphic-tee",
     "sold_out": false
    }
@@ -341,6 +400,12 @@
   "0281382100031_040": {
    "color": "040",
    "color_name": "Blue",
+   "de": {
+    "checked": "2026-11-19",
+    "full_price": 55.0,
+    "price": 39.0,
+    "slug": "jaded-london-blue-distressed-baseball-tee"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-19",
    "name": "Jaded London Blue Distressed Baseball Tee",
@@ -348,8 +413,13 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 45.0,
-    "sizes": null,
+    "price": 33.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-blue-distressed-baseball-tee",
     "sold_out": false
    }
@@ -411,6 +481,12 @@
   "0281382100037_030": {
    "color": "030",
    "color_name": "Green",
+   "de": {
+    "checked": "2026-11-19",
+    "full_price": 59.0,
+    "price": 39.0,
+    "slug": "jaded-london-green-cropped-long-sleeve-graphic-tee"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-19",
    "name": "Jaded London Green Cropped Long Sleeve Graphic Tee",
@@ -418,8 +494,13 @@
    "uk": {
     "full_price": 48.0,
     "listing_sold_out": false,
-    "price": 48.0,
-    "sizes": null,
+    "price": 36.0,
+    "sizes": [
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
     "slug": "jaded-london-green-cropped-long-sleeve-graphic-tee",
     "sold_out": false
    }
@@ -675,6 +756,12 @@
   "0283382100033_040": {
    "color": "040",
    "color_name": "Blue",
+   "de": {
+    "checked": "2026-11-19",
+    "full_price": 109.0,
+    "price": 79.0,
+    "slug": "jaded-london-jude-blue-mid-wash-bootcut-jeans"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-19",
    "name": "Jaded London Jude Blue Mid Wash Bootcut Jeans",
@@ -682,8 +769,14 @@
    "uk": {
     "full_price": 85.0,
     "listing_sold_out": false,
-    "price": 85.0,
-    "sizes": null,
+    "price": 63.0,
+    "sizes": [
+     "28",
+     "30",
+     "32",
+     "34",
+     "36"
+    ],
     "slug": "jaded-london-jude-blue-mid-wash-bootcut-jeans",
     "sold_out": false
    }
@@ -903,6 +996,12 @@
   "0283382100052_093": {
    "color": "093",
    "color_name": "Tinted Denim",
+   "de": {
+    "checked": "2026-11-19",
+    "full_price": 115.0,
+    "price": 85.0,
+    "slug": "jaded-london-mud-wash-blue-jude-bootcut-jeans"
+   },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-19",
    "name": "Jaded London Mud Wash Blue Jude Bootcut Jeans",
@@ -910,8 +1009,14 @@
    "uk": {
     "full_price": 90.0,
     "listing_sold_out": false,
-    "price": 90.0,
-    "sizes": null,
+    "price": 67.0,
+    "sizes": [
+     "28",
+     "30",
+     "32",
+     "34",
+     "36"
+    ],
     "slug": "jaded-london-mud-wash-blue-jude-bootcut-jeans",
     "sold_out": false
    }
@@ -920,10 +1025,10 @@
    "color": "091",
    "color_name": "Indigo",
    "de": {
-    "checked": "2026-11-04",
+    "checked": "2026-11-19",
     "full_price": 119.0,
-    "price": 119.0,
-    "slug": "jaded-london-camo-ldn-applique-baggy-jeans"
+    "price": 89.0,
+    "slug": "jaded-london-the-blessed-endeavour-xl-colossus-jeans"
    },
    "first_seen": "2026-10-30",
    "last_seen": "2026-11-19",
@@ -932,7 +1037,7 @@
    "uk": {
     "full_price": 95.0,
     "listing_sold_out": false,
-    "price": 95.0,
+    "price": 71.0,
     "sizes": [
      "28",
      "30",
@@ -964,9 +1069,9 @@
    "color": "030",
    "color_name": "Green",
    "de": {
-    "checked": "2026-11-12",
+    "checked": "2026-11-19",
     "full_price": 115.0,
-    "price": 115.0,
+    "price": 85.0,
     "slug": "jaded-london-asymmetric-fencing-jacket"
    },
    "first_seen": "2026-11-12",
@@ -976,7 +1081,7 @@
    "uk": {
     "full_price": 90.0,
     "listing_sold_out": false,
-    "price": 90.0,
+    "price": 67.0,
     "sizes": [
      "XS",
      "S",
@@ -1016,6 +1121,6 @@
    }
   }
  },
- "last_size_check": "2026-11-18T21:08:03.670115+00:00",
+ "last_size_check": "2026-11-19T12:34:31.535963+00:00",
  "version": 2
 }
