@@ -3,7 +3,7 @@
   "period": "2026-11-2",
   "used": {
    "№1": 1,
-   "№2": 102
+   "№2": 123
   },
   "warned": []
  },
@@ -505,6 +505,34 @@
     "sold_out": false
    }
   },
+  "0281382100044_001": {
+   "color": "001",
+   "color_name": "Black",
+   "de": {
+    "checked": "2026-11-20",
+    "full_price": 99.0,
+    "price": 99.0,
+    "slug": "jaded-london-black-the-victim-hoodie"
+   },
+   "first_seen": "2026-11-20",
+   "last_seen": "2026-11-20",
+   "name": "Jaded London Black The Victim Hoodie",
+   "style": "0281382100044",
+   "uk": {
+    "full_price": 80.0,
+    "listing_sold_out": false,
+    "price": 80.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
+    "slug": "jaded-london-black-the-victim-hoodie",
+    "sold_out": false
+   }
+  },
   "0282382100007_040": {
    "color": "040",
    "color_name": "Blue",
@@ -521,6 +549,34 @@
      "XL"
     ],
     "slug": "jaded-london-fake-check-shirt",
+    "sold_out": false
+   }
+  },
+  "0282382100011_001": {
+   "color": "001",
+   "color_name": "Black",
+   "de": {
+    "checked": "2026-11-20",
+    "full_price": 95.0,
+    "price": 95.0,
+    "slug": "jaded-london-stars-and-stripes-applique-knit-hoodie"
+   },
+   "first_seen": "2026-11-20",
+   "last_seen": "2026-11-20",
+   "name": "Jaded London Stars And Stripes Appliqué Knit Hoodie",
+   "style": "0282382100011",
+   "uk": {
+    "full_price": 75.0,
+    "listing_sold_out": false,
+    "price": 75.0,
+    "sizes": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL"
+    ],
+    "slug": "jaded-london-stars-and-stripes-applique-knit-hoodie",
     "sold_out": false
    }
   },
@@ -1121,6 +1177,6 @@
    }
   }
  },
- "last_size_check": "2026-11-20T12:34:21.120851+00:00",
+ "last_size_check": "2026-11-20T20:57:00.437452+00:00",
  "version": 2
 }
