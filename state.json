@@ -3,7 +3,7 @@
   "period": "2026-11-2",
   "used": {
    "№1": 1,
-   "№2": 124
+   "№2": 131
   },
   "warned": []
  },
@@ -52,7 +52,6 @@
     "listing_sold_out": false,
     "price": 31.0,
     "sizes": [
-     "S",
      "M",
      "L",
      "XL"
@@ -195,7 +194,7 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 33.0,
+    "price": 45.0,
     "sizes": [
      "XS",
      "S",
@@ -276,7 +275,7 @@
    "uk": {
     "full_price": 60.0,
     "listing_sold_out": false,
-    "price": 45.0,
+    "price": 60.0,
     "sizes": [
      "XS",
      "S",
@@ -304,7 +303,7 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 33.0,
+    "price": 45.0,
     "sizes": [
      "S",
      "M",
@@ -331,7 +330,7 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 33.0,
+    "price": 45.0,
     "sizes": [
      "S",
      "M",
@@ -358,7 +357,7 @@
    "uk": {
     "full_price": 50.0,
     "listing_sold_out": false,
-    "price": 37.0,
+    "price": 50.0,
     "sizes": [
      "XS",
      "S",
@@ -413,7 +412,7 @@
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
-    "price": 33.0,
+    "price": 45.0,
     "sizes": [
      "S",
      "M",
@@ -494,7 +493,7 @@
    "uk": {
     "full_price": 48.0,
     "listing_sold_out": false,
-    "price": 36.0,
+    "price": 48.0,
     "sizes": [
      "S",
      "M",
@@ -825,7 +824,7 @@
    "uk": {
     "full_price": 85.0,
     "listing_sold_out": false,
-    "price": 63.0,
+    "price": 85.0,
     "sizes": [
      "28",
      "30",
@@ -1065,7 +1064,7 @@
    "uk": {
     "full_price": 90.0,
     "listing_sold_out": false,
-    "price": 67.0,
+    "price": 90.0,
     "sizes": [
      "28",
      "30",
@@ -1093,7 +1092,7 @@
    "uk": {
     "full_price": 95.0,
     "listing_sold_out": false,
-    "price": 71.0,
+    "price": 95.0,
     "sizes": [
      "28",
      "30",
@@ -1137,7 +1136,7 @@
    "uk": {
     "full_price": 90.0,
     "listing_sold_out": false,
-    "price": 67.0,
+    "price": 90.0,
     "sizes": [
      "XS",
      "S",
@@ -1177,6 +1176,6 @@
    }
   }
  },
- "last_size_check": "2026-11-20T20:57:00.437452+00:00",
+ "last_size_check": "2026-11-21T12:14:02.470008+00:00",
  "version": 2
 }
