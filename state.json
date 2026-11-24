@@ -3,7 +3,7 @@
   "period": "2026-11-2",
   "used": {
    "№1": 1,
-   "№2": 164
+   "№2": 174
   },
   "warned": []
  },
@@ -885,7 +885,7 @@
    "color": "060",
    "color_name": "Red",
    "de": {
-    "checked": "2026-11-11",
+    "checked": "2026-11-24",
     "full_price": 65.0,
     "price": 45.0,
     "slug": "jaded-london-red-sport-stripe-monster-jogger-shorts2"
@@ -899,6 +899,7 @@
     "listing_sold_out": false,
     "price": 35.0,
     "sizes": [
+     "XS",
      "M",
      "L",
      "XL"
@@ -1123,6 +1124,90 @@
     "sold_out": false
    }
   },
+  "0283382100064_091": {
+   "color": "091",
+   "color_name": "Indigo",
+   "de": {
+    "checked": "2026-11-24",
+    "full_price": 109.0,
+    "price": 109.0,
+    "slug": "jaded-london-ldn-distressed-xl-colossus-jeans"
+   },
+   "first_seen": "2026-11-24",
+   "last_seen": "2026-11-24",
+   "name": "Jaded London LDN Distressed XL Colossus Jeans",
+   "style": "0283382100064",
+   "uk": {
+    "full_price": 85.0,
+    "listing_sold_out": false,
+    "price": 85.0,
+    "sizes": [
+     "28",
+     "30",
+     "32",
+     "34",
+     "36"
+    ],
+    "slug": "jaded-london-ldn-distressed-xl-colossus-jeans",
+    "sold_out": false
+   }
+  },
+  "0283382100065_000": {
+   "color": "000",
+   "color_name": "Assorted",
+   "de": {
+    "checked": "2026-11-24",
+    "full_price": 109.0,
+    "price": 109.0,
+    "slug": "jaded-london-ldn-xl-camo-colossus-jeans"
+   },
+   "first_seen": "2026-11-24",
+   "last_seen": "2026-11-24",
+   "name": "Jaded London LDN XL Camo Colossus Jeans",
+   "style": "0283382100065",
+   "uk": {
+    "full_price": 85.0,
+    "listing_sold_out": false,
+    "price": 85.0,
+    "sizes": [
+     "28",
+     "30",
+     "32",
+     "34",
+     "36"
+    ],
+    "slug": "jaded-london-ldn-xl-camo-colossus-jeans",
+    "sold_out": false
+   }
+  },
+  "0283382100068_093": {
+   "color": "093",
+   "color_name": "Tinted Denim",
+   "de": {
+    "checked": "2026-11-24",
+    "full_price": 109.0,
+    "price": 109.0,
+    "slug": "jaded-london-heart-xl-colossus-jeans"
+   },
+   "first_seen": "2026-11-24",
+   "last_seen": "2026-11-24",
+   "name": "Jaded London Heart XL Colossus Jeans",
+   "style": "0283382100068",
+   "uk": {
+    "full_price": 85.0,
+    "listing_sold_out": false,
+    "price": 85.0,
+    "sizes": [
+     "28",
+     "30",
+     "32",
+     "34",
+     "36"
+    ],
+    "slug": "jaded-london-heart-xl-colossus-jeans",
+    "sold_out": false
+   }
+  },
   "0284382100004_030": {
    "color": "030",
    "color_name": "Green",
@@ -1179,6 +1264,6 @@
    }
   }
  },
- "last_size_check": "2026-11-24T01:48:06.761306+00:00",
+ "last_size_check": "2026-11-24T14:37:31.042099+00:00",
  "version": 2
 }
