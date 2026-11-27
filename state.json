@@ -3,7 +3,7 @@
   "period": "2026-11-2",
   "used": {
    "№1": 1,
-   "№2": 259
+   "№2": 290
   },
   "warned": []
  },
@@ -62,16 +62,23 @@
   "0281382100012_776": {
    "color": "776",
    "color_name": "",
+   "de": {
+    "checked": "2026-11-27",
+    "full_price": 55.0,
+    "price": 55.0,
+    "slug": "jaded-london-uo-exclusive-ecru-ines-waffle-long-sleeve-top"
+   },
    "first_seen": "2026-10-11",
-   "last_seen": "2026-11-23",
-   "missing": true,
+   "last_seen": "2026-11-27",
    "name": "Jaded London UO Exclusive Ecru Ines Waffle Long Sleeve Top",
    "style": "0281382100012",
    "uk": {
     "full_price": 45.0,
     "listing_sold_out": false,
     "price": 45.0,
-    "sizes": null,
+    "sizes": [
+     "L"
+    ],
     "slug": "jaded-london-uo-exclusive-ecru-ines-waffle-long-sleeve-top",
     "sold_out": false
    }
@@ -118,7 +125,6 @@
     "listing_sold_out": false,
     "price": 36.0,
     "sizes": [
-     "M",
      "L",
      "XL"
     ],
@@ -465,7 +471,6 @@
     "listing_sold_out": false,
     "price": 38.0,
     "sizes": [
-     "M",
      "L"
     ],
     "slug": "jaded-london-green-waffle-long-sleeve-henley-tee",
@@ -837,6 +842,7 @@
    },
    "first_seen": "2026-10-11",
    "last_seen": "2026-11-27",
+   "missing": true,
    "name": "Jaded London Stars & Stripes Colossus Jeans",
    "style": "0283382100029",
    "uk": {
@@ -1012,7 +1018,6 @@
     "listing_sold_out": false,
     "price": 42.0,
     "sizes": [
-     "M",
      "L",
      "XL"
     ],
@@ -1397,6 +1402,6 @@
    }
   }
  },
- "last_size_check": "2026-11-26T22:50:35.693338+00:00",
+ "last_size_check": "2026-11-27T13:33:02.791397+00:00",
  "version": 2
 }
